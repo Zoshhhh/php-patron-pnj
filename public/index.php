@@ -1,24 +1,25 @@
 <?php
+session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Fabrique\FabriquePersonnage;
 
-$fabrique = new FabriquePersonnage();
+// Vérifier si un index de personnage est fourni
+$index = isset($_GET['index']) ? (int)$_GET['index'] : null;
 
-$nom = $_GET['nom'] ?? 'Sheila';
-$classe = $_GET['classe'] ?? 'guerrier';
-
-$stats = [];
-foreach (['force', 'dexterite', 'constitution', 'intelligence', 'sagesse', 'charisme', 'pointsDeVie', 'classeArmure', 'vitesse'] as $stat) {
-    if (isset($_GET[$stat])) {
-        $stats[$stat] = (int)$_GET[$stat];
-    }
+if ($index === null || !isset($_SESSION['personnages'][$index])) {
+    header('Location: personnages.php');
+    exit;
 }
 
-$personnage = match($classe) {
-    'guerrier' => $fabrique->creerGuerrier($nom, $stats),
-    'archer' => $fabrique->creerArcher($nom, $stats),
-    default => $fabrique->creerGuerrier($nom, $stats),
+$persoData = $_SESSION['personnages'][$index];
+$fabrique = new FabriquePersonnage();
+
+// Création du personnage avec les stats sauvegardées
+$personnage = match($persoData['classe']) {
+    'guerrier' => $fabrique->creerGuerrier($persoData['nom'], $persoData['stats']),
+    'archer' => $fabrique->creerArcher($persoData['nom'], $persoData['stats']),
+    default => $fabrique->creerGuerrier($persoData['nom'], $persoData['stats']),
 };
 ?>
 
@@ -27,14 +28,14 @@ $personnage = match($classe) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartes de Personnages</title>
+    <title>Fiche de Personnage - <?= htmlspecialchars($personnage->getNom()) ?></title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="character-sheet">
         <div class="character-header">
             <h1><?= htmlspecialchars($personnage->getNom()) ?></h1>
-            <div class="character-class"><?= ucfirst($classe) ?> Niveau 1</div>
+            <div class="character-class"><?= ucfirst($persoData['classe']) ?> Niveau 1</div>
         </div>
 
         <div class="ability-scores">
@@ -90,6 +91,7 @@ $personnage = match($classe) {
         </div>
 
         <div class="actions">
+            <a href="personnages.php" class="button">Retour à la liste</a>
             <a href="create.php" class="button">Créer un nouveau personnage</a>
         </div>
     </div>

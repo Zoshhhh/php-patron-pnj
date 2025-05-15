@@ -1,5 +1,10 @@
 <?php
+session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
+
+if (!isset($_SESSION['personnages'])) {
+    $_SESSION['personnages'] = [];
+}
 
 use App\Fabrique\FabriquePersonnage;
 
@@ -11,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $classe = $_POST['classe'] ?? 'guerrier';
     
     if ($nom) {
-        // Récupération des stats depuis le formulaire
         $stats = [];
         foreach (['force', 'dexterite', 'constitution', 'intelligence', 'sagesse', 'charisme', 'pointsDeVie', 'classeArmure', 'vitesse'] as $stat) {
             if (isset($_POST[$stat])) {
@@ -19,16 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Création du personnage avec les stats
-        $personnage = match($classe) {
-            'guerrier' => $fabrique->creerGuerrier($nom, $stats),
-            'archer' => $fabrique->creerArcher($nom, $stats),
-            default => $fabrique->creerGuerrier($nom, $stats),
-        };
-        
-        // Transmission des stats dans l'URL
-        $statsQuery = http_build_query($stats);
-        header('Location: index.php?nom=' . urlencode($nom) . '&classe=' . urlencode($classe) . '&' . $statsQuery);
+        $_SESSION['personnages'][] = [
+            'nom' => $nom,
+            'classe' => $classe,
+            'stats' => $stats
+        ];
+
+        // Rediriger vers la liste des personnages
+        header('Location: personnages.php');
         exit;
     } else {
         $message = 'Le nom est requis';

@@ -35,6 +35,10 @@ $personnage = match($persoData['classe']) {
     <div class="character-sheet">
         <div class="character-header">
             <h1><?= htmlspecialchars($personnage->getNom()) ?></h1>
+            <?php $categorie = $persoData['categorie'] ?? 'personnage'; ?>
+            <div class="character-category <?= htmlspecialchars($categorie) ?>">
+                <?= ucfirst($categorie) ?>
+            </div>
             <div class="character-class"><?= ucfirst($persoData['classe']) ?> Niveau 1</div>
         </div>
 

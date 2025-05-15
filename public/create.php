@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $nom = $_POST['nom'] ?? '';
     $classe = $_POST['classe'] ?? 'guerrier';
+    $categorie = $_POST['categorie'] ?? 'personnage';
     
     if ($nom) {
         $stats = [];
@@ -26,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['personnages'][] = [
             'nom' => $nom,
             'classe' => $classe,
+            'categorie' => $categorie,
             'stats' => $stats
         ];
 
@@ -37,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Stats par défaut selon la classe
 $statsDefaut = [
     'guerrier' => [
         'force' => 16, 'dexterite' => 14, 'constitution' => 12,
@@ -76,12 +77,24 @@ $statsDefaut = [
                 <input type="text" id="nom" name="nom" required>
             </div>
 
-            <div class="form-group">
-                <label for="classe">Classe</label>
-                <select id="classe" name="classe" onchange="updateDefaultStats()">
-                    <option value="guerrier">Guerrier</option>
-                    <option value="archer">Archer</option>
-                </select>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="classe">Classe</label>
+                    <select id="classe" name="classe" onchange="updateDefaultStats()">
+                        <option value="guerrier">Guerrier</option>
+                        <option value="archer">Archer</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="categorie">Catégorie</label>
+                    <select id="categorie" name="categorie">
+                        <option value="personnage">Personnage</option>
+                        <option value="allie">Allié</option>
+                        <option value="ennemi">Ennemi</option>
+                        <option value="pnj">PNJ</option>
+                    </select>
+                </div>
             </div>
 
             <div class="stats-grid">

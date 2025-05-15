@@ -37,8 +37,12 @@ if (isset($_GET['supprimer'])) {
         <?php else: ?>
             <div class="characters-grid">
                 <?php foreach ($_SESSION['personnages'] as $index => $perso): ?>
-                    <div class="character-card">
+                    <?php $categorie = $perso['categorie'] ?? 'personnage'; ?>
+                    <div class="character-card <?= htmlspecialchars($categorie) ?>">
                         <div class="character-name"><?= htmlspecialchars($perso['nom']) ?></div>
+                        <div class="character-category <?= htmlspecialchars($categorie) ?>">
+                            <?= ucfirst($categorie) ?>
+                        </div>
                         <div class="character-info">
                             <?= ucfirst($perso['classe']) ?> Niveau 1
                         </div>
@@ -57,6 +61,14 @@ if (isset($_GET['supprimer'])) {
                             </div>
                         </div>
                         <div class="character-actions">
+                            <div class="action-dropdown">
+                                <button class="button action-button">Actions ▼</button>
+                                <div class="dropdown-content">
+                                    <a href="#" class="action-item" data-action="attaquer" data-character="<?= $index ?>">Attaquer</a>
+                                    <a href="#" class="action-item" data-action="defendre" data-character="<?= $index ?>">Défendre</a>
+                                    <a href="#" class="action-item" data-action="combat" data-character="<?= $index ?>">Combat</a>
+                                </div>
+                            </div>
                             <a href="index.php?index=<?= $index ?>" class="button">Voir</a>
                             <a href="personnages.php?supprimer=<?= $index ?>" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnage ?')">Supprimer</a>
                         </div>
@@ -69,5 +81,43 @@ if (isset($_GET['supprimer'])) {
             <a href="create.php" class="button primary">Créer un nouveau personnage</a>
         </div>
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gérer l'affichage/masquage des menus déroulants
+        document.querySelectorAll('.action-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const dropdown = this.nextElementSibling;
+                // Fermer tous les autres dropdowns
+                document.querySelectorAll('.dropdown-content').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('show');
+                });
+                dropdown.classList.toggle('show');
+            });
+        });
+
+        // Gérer les clics sur les actions
+        document.querySelectorAll('.action-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const action = this.dataset.action;
+                const characterId = this.dataset.character;
+                console.log(`Action ${action} pour le personnage ${characterId}`);
+                // Fermer le dropdown après le clic
+                this.closest('.dropdown-content').classList.remove('show');
+            });
+        });
+
+        // Fermer les dropdowns quand on clique ailleurs
+        document.addEventListener('click', function(e) {
+            if (!e.target.matches('.action-button')) {
+                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
+        });
+    });
+    </script>
 </body>
 </html> 

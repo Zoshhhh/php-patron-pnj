@@ -5,15 +5,20 @@ use App\Fabrique\FabriquePersonnage;
 
 $fabrique = new FabriquePersonnage();
 
-// Récupération des paramètres
 $nom = $_GET['nom'] ?? 'Sheila';
 $classe = $_GET['classe'] ?? 'guerrier';
 
-// Création du personnage
+$stats = [];
+foreach (['force', 'dexterite', 'constitution', 'intelligence', 'sagesse', 'charisme', 'pointsDeVie', 'classeArmure', 'vitesse'] as $stat) {
+    if (isset($_GET[$stat])) {
+        $stats[$stat] = (int)$_GET[$stat];
+    }
+}
+
 $personnage = match($classe) {
-    'guerrier' => $fabrique->creerGuerrier($nom),
-    'archer' => $fabrique->creerArcher($nom),
-    default => $fabrique->creerGuerrier($nom),
+    'guerrier' => $fabrique->creerGuerrier($nom, $stats),
+    'archer' => $fabrique->creerArcher($nom, $stats),
+    default => $fabrique->creerGuerrier($nom, $stats),
 };
 ?>
 
@@ -36,32 +41,32 @@ $personnage = match($classe) {
             <div class="ability">
                 <div class="ability-name">Force</div>
                 <div class="ability-score"><?= $personnage->getForce() ?></div>
-                <div class="ability-modifier">+<?= floor(($personnage->getForce() - 10) / 2) ?></div>
+                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getForce()) ?></div>
             </div>
             <div class="ability">
                 <div class="ability-name">Dextérité</div>
                 <div class="ability-score"><?= $personnage->getDexterite() ?></div>
-                <div class="ability-modifier">+<?= floor(($personnage->getDexterite() - 10) / 2) ?></div>
+                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></div>
             </div>
             <div class="ability">
                 <div class="ability-name">Constitution</div>
-                <div class="ability-score">12</div>
-                <div class="ability-modifier">+1</div>
+                <div class="ability-score"><?= $personnage->getConstitution() ?></div>
+                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getConstitution()) ?></div>
             </div>
             <div class="ability">
                 <div class="ability-name">Intelligence</div>
-                <div class="ability-score">14</div>
-                <div class="ability-modifier">+2</div>
+                <div class="ability-score"><?= $personnage->getIntelligence() ?></div>
+                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getIntelligence()) ?></div>
             </div>
             <div class="ability">
                 <div class="ability-name">Sagesse</div>
-                <div class="ability-score">14</div>
-                <div class="ability-modifier">+2</div>
+                <div class="ability-score"><?= $personnage->getSagesse() ?></div>
+                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getSagesse()) ?></div>
             </div>
             <div class="ability">
                 <div class="ability-name">Charisme</div>
-                <div class="ability-score">12</div>
-                <div class="ability-modifier">+1</div>
+                <div class="ability-score"><?= $personnage->getCharisme() ?></div>
+                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getCharisme()) ?></div>
             </div>
         </div>
 
@@ -72,15 +77,15 @@ $personnage = match($classe) {
             </div>
             <div class="stat-block">
                 <div class="stat-label">Classe d'armure</div>
-                <div class="stat-value">13</div>
+                <div class="stat-value"><?= $personnage->getClasseArmure() ?></div>
             </div>
             <div class="stat-block">
                 <div class="stat-label">Initiative</div>
-                <div class="stat-value">+<?= floor(($personnage->getDexterite() - 10) / 2) ?></div>
+                <div class="stat-value">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></div>
             </div>
             <div class="stat-block">
                 <div class="stat-label">Vitesse</div>
-                <div class="stat-value">30 ft.</div>
+                <div class="stat-value"><?= $personnage->getVitesse() ?> ft.</div>
             </div>
         </div>
 

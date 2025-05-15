@@ -9,10 +9,23 @@ class Guerrier extends PersonnageAbstrait
     public function __construct(
         string $nom,
         ComportementCombatInterface $comportementCombat,
-        int $pointsDeVie = 20,
-        int $force = 4,
-        int $dexterite = 2
+        array $stats = []
     ) {
-        parent::__construct($nom, $pointsDeVie, $force, $dexterite, $comportementCombat);
+        $statsParDefaut = [
+            'force' => 16,
+            'dexterite' => 14,
+            'constitution' => 12,
+            'intelligence' => 14,
+            'sagesse' => 14,
+            'charisme' => 12,
+            'pointsDeVie' => 20,
+            'classeArmure' => 13,
+            'vitesse' => 30,
+            'comportementCombat' => $comportementCombat
+        ];
+
+        $statsFinal = array_merge($statsParDefaut, $stats);
+        
+        parent::__construct($nom, $statsFinal);
     }
 } 

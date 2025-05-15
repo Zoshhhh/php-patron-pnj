@@ -11,18 +11,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $classe = $_POST['classe'] ?? 'guerrier';
     
     if ($nom) {
+        // Récupération des stats depuis le formulaire
+        $stats = [];
+        foreach (['force', 'dexterite', 'constitution', 'intelligence', 'sagesse', 'charisme', 'pointsDeVie', 'classeArmure', 'vitesse'] as $stat) {
+            if (isset($_POST[$stat])) {
+                $stats[$stat] = (int)$_POST[$stat];
+            }
+        }
+
+        // Création du personnage avec les stats
         $personnage = match($classe) {
-            'guerrier' => $fabrique->creerGuerrier($nom),
-            'archer' => $fabrique->creerArcher($nom),
-            default => $fabrique->creerGuerrier($nom),
+            'guerrier' => $fabrique->creerGuerrier($nom, $stats),
+            'archer' => $fabrique->creerArcher($nom, $stats),
+            default => $fabrique->creerGuerrier($nom, $stats),
         };
         
-        header('Location: index.php?nom=' . urlencode($nom) . '&classe=' . urlencode($classe));
+        // Transmission des stats dans l'URL
+        $statsQuery = http_build_query($stats);
+        header('Location: index.php?nom=' . urlencode($nom) . '&classe=' . urlencode($classe) . '&' . $statsQuery);
         exit;
     } else {
         $message = 'Le nom est requis';
     }
 }
+
+// Stats par défaut selon la classe
+$statsDefaut = [
+    'guerrier' => [
+        'force' => 16, 'dexterite' => 14, 'constitution' => 12,
+        'intelligence' => 14, 'sagesse' => 14, 'charisme' => 12,
+        'pointsDeVie' => 20, 'classeArmure' => 13, 'vitesse' => 30
+    ],
+    'archer' => [
+        'force' => 12, 'dexterite' => 16, 'constitution' => 12,
+        'intelligence' => 14, 'sagesse' => 14, 'charisme' => 12,
+        'pointsDeVie' => 15, 'classeArmure' => 14, 'vitesse' => 35
+    ]
+];
 ?>
 
 <!DOCTYPE html>
@@ -51,10 +76,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-group">
                 <label for="classe">Classe</label>
-                <select id="classe" name="classe">
+                <select id="classe" name="classe" onchange="updateDefaultStats()">
                     <option value="guerrier">Guerrier</option>
                     <option value="archer">Archer</option>
                 </select>
+            </div>
+
+            <div class="stats-grid">
+                <div class="form-group">
+                    <label for="force">Force</label>
+                    <input type="number" id="force" name="force" min="1" max="20" value="16">
+                </div>
+
+                <div class="form-group">
+                    <label for="dexterite">Dextérité</label>
+                    <input type="number" id="dexterite" name="dexterite" min="1" max="20" value="14">
+                </div>
+
+                <div class="form-group">
+                    <label for="constitution">Constitution</label>
+                    <input type="number" id="constitution" name="constitution" min="1" max="20" value="12">
+                </div>
+
+                <div class="form-group">
+                    <label for="intelligence">Intelligence</label>
+                    <input type="number" id="intelligence" name="intelligence" min="1" max="20" value="14">
+                </div>
+
+                <div class="form-group">
+                    <label for="sagesse">Sagesse</label>
+                    <input type="number" id="sagesse" name="sagesse" min="1" max="20" value="14">
+                </div>
+
+                <div class="form-group">
+                    <label for="charisme">Charisme</label>
+                    <input type="number" id="charisme" name="charisme" min="1" max="20" value="12">
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="form-group">
+                    <label for="pointsDeVie">Points de vie</label>
+                    <input type="number" id="pointsDeVie" name="pointsDeVie" min="1" value="20">
+                </div>
+
+                <div class="form-group">
+                    <label for="classeArmure">Classe d'armure</label>
+                    <input type="number" id="classeArmure" name="classeArmure" min="1" value="13">
+                </div>
+
+                <div class="form-group">
+                    <label for="vitesse">Vitesse</label>
+                    <input type="number" id="vitesse" name="vitesse" min="1" value="30">
+                </div>
             </div>
 
             <div class="form-actions">
@@ -63,5 +137,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </form>
     </div>
+
+    <script>
+    const statsDefaut = <?= json_encode($statsDefaut) ?>;
+
+    function updateDefaultStats() {
+        const classe = document.getElementById('classe').value;
+        const stats = statsDefaut[classe];
+        
+        for (const [stat, value] of Object.entries(stats)) {
+            const input = document.getElementById(stat);
+            if (input) {
+                input.value = value;
+            }
+        }
+    }
+    </script>
 </body>
 </html> 

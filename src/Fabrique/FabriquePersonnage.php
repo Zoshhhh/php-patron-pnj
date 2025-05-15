@@ -10,25 +10,23 @@ use App\Strategie\CombatAuCorpsACorps;
 
 class FabriquePersonnage
 {
-    public function creerGuerrier(string $nom): PersonnageInterface
+    public function creerGuerrier(string $nom, array $stats = []): PersonnageInterface
     {
-        return new Guerrier($nom, new CombatAuCorpsACorps());
+        return new Guerrier($nom, new CombatAuCorpsACorps(), $stats);
     }
 
-    public function creerArcher(string $nom): PersonnageInterface
+    public function creerArcher(string $nom, array $stats = []): PersonnageInterface
     {
-        return new Archer($nom, new CombatADistance());
+        return new Archer($nom, new CombatADistance(), $stats);
     }
 
-    public function creerAllie(string $nom): PersonnageInterface
+    public function creerAllie(string $nom, array $stats = []): PersonnageInterface
     {
-        // Par défaut, on crée un guerrier allié
-        return $this->creerGuerrier($nom);
+        return $this->creerGuerrier($nom, $stats);
     }
 
-    public function creerEnnemi(string $nom): PersonnageInterface
+    public function creerEnnemi(string $nom, array $stats = []): PersonnageInterface
     {
-        // Par défaut, on crée un archer ennemi
-        return $this->creerArcher($nom);
+        return $this->creerArcher($nom, $stats);
     }
 } 

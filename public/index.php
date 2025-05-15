@@ -4,7 +4,17 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Fabrique\FabriquePersonnage;
 
 $fabrique = new FabriquePersonnage();
-$personnage = $fabrique->creerGuerrier("Sheila");
+
+// Récupération des paramètres
+$nom = $_GET['nom'] ?? 'Sheila';
+$classe = $_GET['classe'] ?? 'guerrier';
+
+// Création du personnage
+$personnage = match($classe) {
+    'guerrier' => $fabrique->creerGuerrier($nom),
+    'archer' => $fabrique->creerArcher($nom),
+    default => $fabrique->creerGuerrier($nom),
+};
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +29,7 @@ $personnage = $fabrique->creerGuerrier("Sheila");
     <div class="character-sheet">
         <div class="character-header">
             <h1><?= htmlspecialchars($personnage->getNom()) ?></h1>
-            <div class="character-class">Guerrier Niveau 1</div>
+            <div class="character-class"><?= ucfirst($classe) ?> Niveau 1</div>
         </div>
 
         <div class="ability-scores">
@@ -72,6 +82,10 @@ $personnage = $fabrique->creerGuerrier("Sheila");
                 <div class="stat-label">Vitesse</div>
                 <div class="stat-value">30 ft.</div>
             </div>
+        </div>
+
+        <div class="actions">
+            <a href="create.php" class="button">Créer un nouveau personnage</a>
         </div>
     </div>
 </body>

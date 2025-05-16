@@ -12,30 +12,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         cards.forEach(card => {
             const name = card.querySelector('.character-name').textContent.toLowerCase();
-            const cardCategory = card.classList.contains(category);
-            const shouldShow = (category === 'all' || cardCategory) && 
+            const cardCategory = card.getAttribute('data-category') || card.classList[1];
+            const shouldShow = (category === 'all' || cardCategory === category) && 
                              name.includes(searchTerm);
-            card.classList.toggle('hidden', !shouldShow);
+            card.style.display = shouldShow ? '' : 'none';
         });
 
-        // Tri
-        const visibleCards = cards.filter(card => !card.classList.contains('hidden'));
-        visibleCards.sort((a, b) => {
-            switch(sortValue) {
-                case 'name':
-                    return a.querySelector('.character-name').textContent
-                        .localeCompare(b.querySelector('.character-name').textContent);
-                case 'category':
-                    return a.classList[1].localeCompare(b.classList[1]);
-                case 'level':
-                    const levelA = parseInt(a.querySelector('.character-info').textContent.match(/Niveau (\d+)/)[1]);
-                    const levelB = parseInt(b.querySelector('.character-info').textContent.match(/Niveau (\d+)/)[1]);
-                    return levelB - levelA;
-                default:
-                    return 0;
-            }
-        });
+        const visibleCards = cards.filter(card => card.style.display !== 'none')
+            .sort((a, b) => {
+                switch(sortValue) {
+                    case 'name':
+                        return a.querySelector('.character-name').textContent
+                            .localeCompare(b.querySelector('.character-name').textContent);
+                    case 'category':
+                        const catA = a.getAttribute('data-category') || a.classList[1];
+                        const catB = b.getAttribute('data-category') || b.classList[1];
+                        return catA.localeCompare(catB);
+                    case 'level':
+                        const levelA = parseInt(a.querySelector('.character-info').textContent.match(/Niveau (\d+)/)[1]);
+                        const levelB = parseInt(b.querySelector('.character-info').textContent.match(/Niveau (\d+)/)[1]);
+                        return levelB - levelA;
+                    default:
+                        return 0;
+                }
+            });
 
+        charactersGrid.innerHTML = '';
         visibleCards.forEach(card => charactersGrid.appendChild(card));
     }
 

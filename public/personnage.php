@@ -11,7 +11,7 @@ if (isset($_GET['supprimer'])) {
         unset($_SESSION['personnages'][$index]);
         $_SESSION['personnages'] = array_values($_SESSION['personnages']);
     }
-    header('Location: personnages.php');
+    header('Location: personnage.php');
     exit;
 }
 ?>
@@ -88,7 +88,7 @@ if (isset($_GET['supprimer'])) {
                                 </div>
                             </div>
                             <a href="index.php?index=<?= $index ?>" class="button">Voir</a>
-                            <a href="personnages.php?supprimer=<?= $index ?>" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnage ?')">Supprimer</a>
+                            <a href="personnage.php?supprimer=<?= $index ?>" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnage ?')">Supprimer</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -96,7 +96,9 @@ if (isset($_GET['supprimer'])) {
         <?php endif; ?>
 
         <div class="actions">
-            <a href="create.php" class="button primary">Créer un nouveau personnage</a>
+            <a href="create_personnage.php" class="button primary">Créer un nouveau personnage</a>
+            <a href="create_classe.php" class="button">Créer une classe</a>
+            <a href="classe.php" class="button">Voir les classes</a>
         </div>
     </div>
 

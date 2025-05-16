@@ -31,8 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'stats' => $stats
         ];
 
-        // Rediriger vers la liste des personnages
-        header('Location: personnages.php');
+        header('Location: personnage.php');
         exit;
     } else {
         $message = 'Le nom est requis';

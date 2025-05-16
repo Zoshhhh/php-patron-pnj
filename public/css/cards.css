@@ -1,22 +1,24 @@
 .characters-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
+    gap: 30px;
     margin: 20px 0;
-    padding: 20px;
 }
 
 .character-card {
     background-color: var(--background-color);
     border: 2px solid var(--border-color);
     border-radius: 10px;
-    padding: 15px;
-    transition: transform 0.2s;
-    width: 100%;
+    padding: 20px;
+    transition: all 0.2s ease;
+    position: relative;
 }
 
 .character-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    position: relative;
 }
 
 .character-name {
@@ -28,16 +30,18 @@
 
 .character-info {
     color: var(--primary-color);
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 0.9em;
 }
 
 .character-stats {
-    display: flex;
-    justify-content: space-around;
-    margin: 15px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
     background-color: var(--secondary-color);
-    padding: 10px;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
 }
 
 .stat {
@@ -49,36 +53,20 @@
     font-size: 0.8em;
     color: var(--primary-color);
     font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 3px;
 }
 
 .character-actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     justify-content: flex-end;
+    margin-top: 15px;
+    position: relative;
+    z-index: 20;
 }
 
-/* Styles spécifiques pour chaque catégorie de personnage */
-.character-card.personnage {
-    border-color: #4a3223;
-    background-color: var(--background-color);
-}
-
-.character-card.allie {
-    border-color: #2c6b2c;
-    background-color: #f5f8f5;
-}
-
-.character-card.ennemi {
-    border-color: #8b2e2e;
-    background-color: #f8f5f5;
-}
-
-.character-card.pnj {
-    border-color: #2d4a8b;
-    background-color: #f5f6f8;
-}
-
-/* Badge de catégorie */
+/* Styles spécifiques pour chaque catégorie */
 .character-category {
     display: inline-block;
     padding: 3px 8px;
@@ -86,6 +74,22 @@
     font-size: 0.8em;
     margin-bottom: 10px;
     color: white;
+}
+
+.character-card.personnage {
+    border-color: #4a3223;
+}
+
+.character-card.allie {
+    border-color: #2c6b2c;
+}
+
+.character-card.ennemi {
+    border-color: #8b2e2e;
+}
+
+.character-card.pnj {
+    border-color: #2d4a8b;
 }
 
 .character-category.personnage {

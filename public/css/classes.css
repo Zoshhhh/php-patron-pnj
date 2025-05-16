@@ -1,0 +1,149 @@
+.classes-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.classes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin: 20px 0;
+}
+
+.class-card {
+    background-color: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.2s;
+}
+
+.class-card:hover {
+    transform: translateY(-5px);
+}
+
+.class-name {
+    font-size: 1.8em;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.class-description {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.class-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Formulaire de création de classe */
+.form-section {
+    margin: 30px 0;
+}
+
+.form-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.competence-entry,
+.equipement-entry {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.competence-entry input,
+.equipement-entry input {
+    flex: 1;
+}
+
+.remove-competence,
+.remove-equipement {
+    padding: 5px 10px;
+    font-size: 1.2em;
+    line-height: 1;
+    background-color: #8b2e2e;
+}
+
+.remove-competence:hover,
+.remove-equipement:hover {
+    background-color: #6b2323;
+}
+
+.competences-container,
+.equipement-container {
+    margin-bottom: 15px;
+}
+
+/* Modal de détails de classe */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background-color: var(--background-color);
+    margin: 5% auto;
+    padding: 30px;
+    width: 70%;
+    max-width: 800px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.stats-section {
+    margin: 20px 0;
+}
+
+.details-section {
+    margin-top: 30px;
+}
+
+.details-section h3 {
+    color: var(--primary-color);
+    margin: 20px 0 10px;
+}
+
+.details-section ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.details-section li {
+    background-color: var(--secondary-color);
+    padding: 5px 15px;
+    border-radius: 15px;
+    color: var(--primary-color);
+    font-size: 0.9em;
+} 

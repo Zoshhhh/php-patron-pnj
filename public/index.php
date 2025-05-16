@@ -4,18 +4,16 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Fabrique\FabriquePersonnage;
 
-// Vérifier si un index de personnage est fourni
 $index = isset($_GET['index']) ? (int)$_GET['index'] : null;
 
 if ($index === null || !isset($_SESSION['personnages'][$index])) {
-    header('Location: personnages.php');
+    header('Location: personnage.php');
     exit;
 }
 
 $persoData = $_SESSION['personnages'][$index];
 $fabrique = new FabriquePersonnage();
 
-// Création du personnage avec les stats sauvegardées
 $personnage = match($persoData['classe']) {
     'guerrier' => $fabrique->creerGuerrier($persoData['nom'], $persoData['stats']),
     'archer' => $fabrique->creerArcher($persoData['nom'], $persoData['stats']),
@@ -30,73 +28,78 @@ $personnage = match($persoData['classe']) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fiche de Personnage - <?= htmlspecialchars($personnage->getNom()) ?></title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/details.css">
 </head>
 <body>
-    <div class="character-sheet">
+    <div class="character-details">
         <div class="character-header">
-            <h1><?= htmlspecialchars($personnage->getNom()) ?></h1>
+            <div class="character-title">
+                <h1><?= htmlspecialchars($personnage->getNom()) ?></h1>
+                <div class="character-subtitle"><?= ucfirst($persoData['classe']) ?> Niveau 1</div>
+            </div>
             <?php $categorie = $persoData['categorie'] ?? 'personnage'; ?>
-            <div class="character-category <?= htmlspecialchars($categorie) ?>">
+            <div class="character-category-badge <?= htmlspecialchars($categorie) ?>">
                 <?= ucfirst($categorie) ?>
             </div>
-            <div class="character-class"><?= ucfirst($persoData['classe']) ?> Niveau 1</div>
         </div>
 
-        <div class="ability-scores">
-            <div class="ability">
+        <div class="abilities-section">
+            <div class="ability-box">
                 <div class="ability-name">Force</div>
                 <div class="ability-score"><?= $personnage->getForce() ?></div>
                 <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getForce()) ?></div>
             </div>
-            <div class="ability">
+            <div class="ability-box">
                 <div class="ability-name">Dextérité</div>
                 <div class="ability-score"><?= $personnage->getDexterite() ?></div>
                 <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></div>
             </div>
-            <div class="ability">
+            <div class="ability-box">
                 <div class="ability-name">Constitution</div>
                 <div class="ability-score"><?= $personnage->getConstitution() ?></div>
                 <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getConstitution()) ?></div>
             </div>
-            <div class="ability">
+            <div class="ability-box">
                 <div class="ability-name">Intelligence</div>
                 <div class="ability-score"><?= $personnage->getIntelligence() ?></div>
                 <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getIntelligence()) ?></div>
             </div>
-            <div class="ability">
+            <div class="ability-box">
                 <div class="ability-name">Sagesse</div>
                 <div class="ability-score"><?= $personnage->getSagesse() ?></div>
                 <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getSagesse()) ?></div>
             </div>
-            <div class="ability">
+            <div class="ability-box">
                 <div class="ability-name">Charisme</div>
                 <div class="ability-score"><?= $personnage->getCharisme() ?></div>
                 <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getCharisme()) ?></div>
             </div>
         </div>
 
-        <div class="stats">
-            <div class="stat-block">
-                <div class="stat-label">Points de vie</div>
-                <div class="stat-value"><?= $personnage->getPointsDeVie() ?></div>
-            </div>
-            <div class="stat-block">
-                <div class="stat-label">Classe d'armure</div>
-                <div class="stat-value"><?= $personnage->getClasseArmure() ?></div>
-            </div>
-            <div class="stat-block">
-                <div class="stat-label">Initiative</div>
-                <div class="stat-value">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></div>
-            </div>
-            <div class="stat-block">
-                <div class="stat-label">Vitesse</div>
-                <div class="stat-value"><?= $personnage->getVitesse() ?> ft.</div>
+        <div class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Points de vie</div>
+                    <div class="stat-value"><?= $personnage->getPointsDeVie() ?></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Classe d'armure</div>
+                    <div class="stat-value"><?= $personnage->getClasseArmure() ?></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Initiative</div>
+                    <div class="stat-value">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Vitesse</div>
+                    <div class="stat-value"><?= $personnage->getVitesse() ?> ft.</div>
+                </div>
             </div>
         </div>
 
-        <div class="actions">
+        <div class="actions-section">
             <a href="personnages.php" class="button">Retour à la liste</a>
-            <a href="create.php" class="button">Créer un nouveau personnage</a>
+            <a href="create_personnage.php" class="button">Créer un nouveau personnage</a>
         </div>
     </div>
 </body>

@@ -1,0 +1,143 @@
+.character-details {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--background-color);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.character-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.character-title {
+    color: var(--primary-color);
+}
+
+.character-title h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.5em;
+}
+
+.character-subtitle {
+    color: var(--primary-color);
+    font-size: 1.2em;
+    opacity: 0.8;
+}
+
+.character-category-badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.character-category-badge.personnage { background-color: #4a3223; }
+.character-category-badge.allie { background-color: #2c6b2c; }
+.character-category-badge.ennemi { background-color: #8b2e2e; }
+.character-category-badge.pnj { background-color: #2d4a8b; }
+
+.stats-section {
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.8em;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.abilities-section {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.ability-box {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.ability-name {
+    font-size: 0.8em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.ability-score {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.ability-modifier {
+    font-size: 1.1em;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+.description-section {
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.description-section h2 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.description-content {
+    color: var(--primary-color);
+    line-height: 1.6;
+}
+
+.actions-section {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-color);
+} 

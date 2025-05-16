@@ -2,13 +2,13 @@
 session_start();
 header('Content-Type: application/json');
 
-if (!isset($_GET['classe'])) {
+if (!isset($_GET['id'])) {
     http_response_code(400);
     echo json_encode(['error' => 'ID de classe manquant']);
     exit;
 }
 
-$classeId = $_GET['classe'];
+$classeId = $_GET['id'];
 $classe = null;
 
 foreach ($_SESSION['classes'] as $c) {

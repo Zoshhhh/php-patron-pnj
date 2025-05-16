@@ -11,7 +11,7 @@ if (isset($_GET['supprimer'])) {
         unset($_SESSION['personnages'][$index]);
         $_SESSION['personnages'] = array_values($_SESSION['personnages']);
     }
-    header('Location: personnage.php');
+    header('Location: /views/personnage/index.php');
     exit;
 }
 ?>
@@ -22,8 +22,8 @@ if (isset($_GET['supprimer'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Personnages</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/cards.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/cards.css">
 </head>
 <body>
     <div class="characters-list">
@@ -87,8 +87,8 @@ if (isset($_GET['supprimer'])) {
                                     <a href="#" class="action-item" data-action="combat" data-character="<?= $index ?>">Combat</a>
                                 </div>
                             </div>
-                            <a href="index.php?index=<?= $index ?>" class="button">Voir</a>
-                            <a href="personnage.php?supprimer=<?= $index ?>" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnage ?')">Supprimer</a>
+                            <a href="/views/personnage/show.php?id=<?= $index ?>" class="button">Voir</a>
+                            <a href="/actions/personnage/delete.php?id=<?= $index ?>" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnage ?')">Supprimer</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -96,9 +96,9 @@ if (isset($_GET['supprimer'])) {
         <?php endif; ?>
 
         <div class="actions">
-            <a href="create_personnage.php" class="button primary">Créer un nouveau personnage</a>
-            <a href="create_classe.php" class="button">Créer une classe</a>
-            <a href="classe.php" class="button">Voir les classes</a>
+            <a href="/views/personnage/create.php" class="button primary">Créer un nouveau personnage</a>
+            <a href="/views/classe/create.php" class="button">Créer une classe</a>
+            <a href="/views/classe/index.php" class="button">Voir les classes</a>
         </div>
     </div>
 

@@ -27,7 +27,24 @@ if (isset($_GET['supprimer'])) {
 <body>
     <div class="characters-list">
         <div class="character-header">
-            <h1>Mes Personnages</h1>
+            <div class="header-content">
+                <h1>Mes Personnages</h1>
+                <div class="search-filters">
+                    <input type="text" id="searchInput" placeholder="Rechercher...">
+                    <select id="categoryFilter">
+                        <option value="all">Toutes les catégories</option>
+                        <option value="personnage">Personnages</option>
+                        <option value="allie">Alliés</option>
+                        <option value="ennemi">Ennemis</option>
+                        <option value="pnj">PNJ</option>
+                    </select>
+                    <select id="sortBy">
+                        <option value="name">Trier par nom</option>
+                        <option value="category">Trier par catégorie</option>
+                        <option value="level">Trier par niveau</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <?php if (empty($_SESSION['personnages'])): ?>
@@ -104,12 +121,10 @@ if (isset($_GET['supprimer'])) {
                 const action = this.dataset.action;
                 const characterId = this.dataset.character;
                 console.log(`Action ${action} pour le personnage ${characterId}`);
-                // Fermer le dropdown après le clic
                 this.closest('.dropdown-content').classList.remove('show');
             });
         });
 
-        // Fermer les dropdowns quand on clique ailleurs
         document.addEventListener('click', function(e) {
             if (!e.target.matches('.action-button')) {
                 document.querySelectorAll('.dropdown-content').forEach(dropdown => {
@@ -119,5 +134,6 @@ if (isset($_GET['supprimer'])) {
         });
     });
     </script>
+    <script src="js/main.js"></script>
 </body>
 </html> 

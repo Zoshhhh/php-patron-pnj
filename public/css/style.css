@@ -43,6 +43,31 @@ body {
     font-size: 2.5em;
 }
 
+.search-filters {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-filters input,
+.search-filters select {
+    height: 35px;
+    padding: 0 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 0.9em;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+}
+
+.search-filters input {
+    width: 200px;
+}
+
+.search-filters select {
+    min-width: 150px;
+}
+
 .character-class {
     color: var(--primary-color);
     font-size: 1.2em;
@@ -206,68 +231,6 @@ button:hover {
     padding: 20px;
 }
 
-.characters-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    margin: 20px 0;
-    padding: 20px;
-}
-
-.character-card {
-    width: 100%;
-}
-
-.character-card {
-    background-color: var(--background-color);
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    padding: 15px;
-    transition: transform 0.2s;
-}
-
-.character-card:hover {
-    transform: translateY(-5px);
-}
-
-.character-name {
-    font-size: 1.5em;
-    color: var(--primary-color);
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.character-info {
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.character-stats {
-    display: flex;
-    justify-content: space-around;
-    margin: 15px 0;
-    background-color: var(--secondary-color);
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.stat {
-    text-align: center;
-}
-
-.stat span {
-    display: block;
-    font-size: 0.8em;
-    color: var(--primary-color);
-    font-weight: bold;
-}
-
-.character-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-}
-
 .empty-state {
     text-align: center;
     padding: 40px;
@@ -346,80 +309,4 @@ button:hover {
     grid-template-columns: 1fr 1fr;
     gap: 15px;
     margin-bottom: 20px;
-}
-
-/* Styles spécifiques pour chaque catégorie de personnage */
-.character-card.personnage {
-    border-color: #4a3223;
-    background-color: var(--background-color);
-}
-
-.character-card.allie {
-    border-color: #2c6b2c;
-    background-color: #f5f8f5;
-}
-
-.character-card.ennemi {
-    border-color: #8b2e2e;
-    background-color: #f8f5f5;
-}
-
-.character-card.pnj {
-    border-color: #2d4a8b;
-    background-color: #f5f6f8;
-}
-
-/* Badge de catégorie */
-.character-category {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 0.8em;
-    margin-bottom: 10px;
-    color: white;
-}
-
-.character-category.personnage {
-    background-color: #4a3223;
-}
-
-.character-category.allie {
-    background-color: #2c6b2c;
-}
-
-.character-category.ennemi {
-    background-color: #8b2e2e;
-}
-
-.character-category.pnj {
-    background-color: #2d4a8b;
-}
-
-.search-filters {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.search-filters input,
-.search-filters select {
-    height: 35px;
-    padding: 0 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-size: 0.9em;
-    background-color: var(--background-color);
-    color: var(--primary-color);
-}
-
-.search-filters input {
-    width: 200px;
-}
-
-.search-filters select {
-    min-width: 150px;
-}
-
-.character-card.hidden {
-    display: none;
 } 

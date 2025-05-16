@@ -87,8 +87,8 @@ if (isset($_GET['supprimer'])) {
                                     <a href="#" class="action-item" data-action="combat" data-character="<?= $index ?>">Combat</a>
                                 </div>
                             </div>
-                            <a href="/views/personnage/show.php?id=<?= $index ?>" class="button">Voir</a>
-                            <a href="/actions/personnage/delete.php?id=<?= $index ?>" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnage ?')">Supprimer</a>
+                            <a href="./show.php?id=<?= $index ?>" class="button">Voir</a>
+                            <a href="../../actions/personnage/delete.php?id=<?= $index ?>" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnage ?')">Supprimer</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -96,9 +96,9 @@ if (isset($_GET['supprimer'])) {
         <?php endif; ?>
 
         <div class="actions">
-            <a href="/views/personnage/create.php" class="button primary">Créer un nouveau personnage</a>
-            <a href="/views/classe/create.php" class="button">Créer une classe</a>
-            <a href="/views/classe/index.php" class="button">Voir les classes</a>
+            <a href="./create.php" class="button primary">Créer un nouveau personnage</a>
+            <a href="./create.php" class="button">Créer une classe</a>
+            <a href="./views/classe/index.php" class="button">Voir les classes</a>
         </div>
     </div>
 
@@ -137,6 +137,6 @@ if (isset($_GET['supprimer'])) {
         });
     });
     </script>
-    <script src="js/main.js"></script>
+    <script src="../../js/main.js"></script>
 </body>
 </html> 

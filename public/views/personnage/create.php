@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../config.php';
-require_once ROOT_PATH . '/vendor/autoload.php';
+require_once ROOT_PATH . '\vendor\autoload.php';
 
 if (!isset($_SESSION['personnages'])) {
     $_SESSION['personnages'] = [];
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'stats' => $stats
         ];
 
-        header('Location: /views/personnage/index.php');
+        header('Location: ./index.php');
         exit;
     } else {
         $message = 'Le nom est requis';
@@ -59,7 +59,7 @@ $statsDefaut = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Créer un Personnage</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
     <div class="character-sheet creation-form">
@@ -71,7 +71,7 @@ $statsDefaut = [
             <div class="alert"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="/actions/personnage/create.php" class="character-form">
+        <form method="POST" action="../../actions/personnage/create.php" class="character-form">
             <div class="form-group">
                 <label for="nom">Nom du personnage</label>
                 <input type="text" id="nom" name="nom" required>

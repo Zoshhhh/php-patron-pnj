@@ -88,8 +88,8 @@ if (isset($_GET['supprimer'])) {
                                     <a href="#" class="action-item" data-action="combat" data-character="<?= $index ?>">Combat</a>
                                 </div>
                             </div>
-                            <a href="/views/personnage/show.php?id=<?= $index ?>" class="button">Voir</a>
-                            <a href="/actions/personnage/delete.php?id=<?= $index ?>" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnage ?')">Supprimer</a>
+                            <a href="./show.php?id=<?= $index ?>" class="button">Voir</a>
+                            <a href="../../actions/personnage/delete.php?id=<?= $index ?>" class="button danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnage ?')">Supprimer</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -140,6 +140,6 @@ if (isset($_GET['supprimer'])) {
         });
     });
     </script>
-    <script src="js/main.js"></script>
+    <script src="../../js/main.js"></script>
 </body>
 </html> 

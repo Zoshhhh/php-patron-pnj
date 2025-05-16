@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../../config.php';
 
 if (!isset($_SESSION['personnages'])) {
     $_SESSION['personnages'] = [];
@@ -97,6 +98,8 @@ if (isset($_GET['supprimer'])) {
 
         <div class="actions">
             <a href="/views/personnage/create.php" class="button primary">Créer un nouveau personnage</a>
+            <a href="/views/item/create.php" class="button primary">Créer un nouvel item</a>
+            <a href="/views/item/show.php" class="button">Voir les items</a>
             <a href="/views/classe/create.php" class="button">Créer une classe</a>
             <a href="/views/classe/index.php" class="button">Voir les classes</a>
         </div>

@@ -7,12 +7,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Initialiser le stockage des items si nécessaire
 if (!isset($_SESSION['items'])) {
     $_SESSION['items'] = [];
 }
 
-// Validation du type d'item
 $itemType = $_POST['itemType'] ?? '';
 if (!array_key_exists($itemType, ITEM_TYPES)) {
     $_SESSION['error'] = ERROR_MESSAGES['invalid_item_type'];
@@ -20,7 +18,6 @@ if (!array_key_exists($itemType, ITEM_TYPES)) {
     exit;
 }
 
-// Création de l'item de base
 $item = [
     'type' => $itemType,
     'name' => $_POST['name'] ?? '',
@@ -28,7 +25,6 @@ $item = [
     'value' => (int)($_POST['value'] ?? 0)
 ];
 
-// Ajout des propriétés spécifiques selon le type
 switch ($itemType) {
     case 'combat':
         $item['damage'] = min((int)($_POST['damage'] ?? DEFAULT_ITEM_VALUES['damage']), MAX_DAMAGE);

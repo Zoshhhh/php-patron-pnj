@@ -27,81 +27,131 @@ $personnage = match($persoData['classe']) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiche de Personnage - <?= htmlspecialchars($personnage->getNom()) ?></title>
+    <title><?= htmlspecialchars($personnage->getNom()) ?> - Fiche de personnage</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/details.css">
 </head>
 <body>
-    <div class="character-details">
-        <div class="character-header">
-            <div class="character-title">
-                <h1><?= htmlspecialchars($personnage->getNom()) ?></h1>
-                <div class="character-subtitle"><?= ucfirst($persoData['classe']) ?> Niveau 1</div>
+    <div class="character-sheet">
+        <nav class="character-nav">
+            <div class="nav-group">
+                <a href="/views/personnage/index.php" class="nav-link">← Retour</a>
+                <span class="nav-separator">/</span>
+                <a href="/views/personnage/create.php" class="nav-link">Nouveau</a>
             </div>
-            <?php $categorie = $persoData['categorie'] ?? 'personnage'; ?>
-            <div class="character-category-badge <?= htmlspecialchars($categorie) ?>">
-                <?= ucfirst($categorie) ?>
+            <div class="nav-category <?= htmlspecialchars($persoData['categorie'] ?? 'personnage') ?>">
+                <?= ucfirst($persoData['categorie'] ?? 'personnage') ?>
             </div>
-        </div>
+        </nav>
 
-        <div class="abilities-section">
-            <div class="ability-box">
-                <div class="ability-name">Force</div>
-                <div class="ability-score"><?= $personnage->getForce() ?></div>
-                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getForce()) ?></div>
+        <header class="character-header">
+            <div class="header-main">
+                <div class="header-title">
+                    <h1><?= htmlspecialchars($personnage->getNom()) ?></h1>
+                    <div class="character-meta">
+                        <span class="class-badge"><?= ucfirst($persoData['classe']) ?></span>
+                        <span class="level-badge">Niveau 1</span>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button type="button" class="action-button edit-button" onclick="window.location.href='/views/personnage/edit.php?id=<?= $index ?>'">
+                        ✏️ Modifier
+                    </button>
+                    <button type="button" class="action-button delete-button" onclick="confirmDelete(<?= $index ?>)">
+                        🗑️ Supprimer
+                    </button>
+                </div>
             </div>
-            <div class="ability-box">
-                <div class="ability-name">Dextérité</div>
-                <div class="ability-score"><?= $personnage->getDexterite() ?></div>
-                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></div>
+            
+            <div class="vital-stats">
+                <div class="vital-stat" data-tooltip="Points de vie actuels">
+                    <span class="stat-icon">❤️</span>
+                    <span class="stat-value"><?= $personnage->getPointsDeVie() ?></span>
+                    <span class="stat-label">PV</span>
+                </div>
+                <div class="vital-stat" data-tooltip="Classe d'armure - Plus c'est élevé, plus le personnage est difficile à toucher">
+                    <span class="stat-icon">🛡️</span>
+                    <span class="stat-value"><?= $personnage->getClasseArmure() ?></span>
+                    <span class="stat-label">CA</span>
+                </div>
+                <div class="vital-stat" data-tooltip="Bonus d'initiative - Détermine l'ordre d'action en combat">
+                    <span class="stat-icon">⚡</span>
+                    <span class="stat-value">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></span>
+                    <span class="stat-label">Initiative</span>
+                </div>
             </div>
-            <div class="ability-box">
-                <div class="ability-name">Constitution</div>
-                <div class="ability-score"><?= $personnage->getConstitution() ?></div>
-                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getConstitution()) ?></div>
-            </div>
-            <div class="ability-box">
-                <div class="ability-name">Intelligence</div>
-                <div class="ability-score"><?= $personnage->getIntelligence() ?></div>
-                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getIntelligence()) ?></div>
-            </div>
-            <div class="ability-box">
-                <div class="ability-name">Sagesse</div>
-                <div class="ability-score"><?= $personnage->getSagesse() ?></div>
-                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getSagesse()) ?></div>
-            </div>
-            <div class="ability-box">
-                <div class="ability-name">Charisme</div>
-                <div class="ability-score"><?= $personnage->getCharisme() ?></div>
-                <div class="ability-modifier">+<?= $personnage->getModificateur($personnage->getCharisme()) ?></div>
-            </div>
-        </div>
+        </header>
 
-        <div class="stats-section">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-label">Points de vie</div>
-                    <div class="stat-value"><?= $personnage->getPointsDeVie() ?></div>
+        <div class="character-content">
+            <section class="abilities-section">
+                <h2>Caractéristiques</h2>
+                <div class="abilities-grid">
+                    <?php
+                    $abilities = [
+                        'Force' => $personnage->getForce(),
+                        'Dextérité' => $personnage->getDexterite(),
+                        'Constitution' => $personnage->getConstitution(),
+                        'Intelligence' => $personnage->getIntelligence(),
+                        'Sagesse' => $personnage->getSagesse(),
+                        'Charisme' => $personnage->getCharisme()
+                    ];
+                    $abilityDescriptions = [
+                        'Force' => 'Force physique, capacité à porter et frapper',
+                        'Dextérité' => 'Agilité, réflexes et équilibre',
+                        'Constitution' => 'Endurance, résistance et vitalité',
+                        'Intelligence' => 'Mémoire, raisonnement et apprentissage',
+                        'Sagesse' => 'Perception, intuition et volonté',
+                        'Charisme' => 'Force de personnalité et leadership'
+                    ];
+                    foreach ($abilities as $name => $score): ?>
+                        <div class="ability-card" data-tooltip="<?= $abilityDescriptions[$name] ?>">
+                            <div class="ability-name"><?= $name ?></div>
+                            <div class="ability-score"><?= $score ?></div>
+                            <div class="ability-modifier">+<?= $personnage->getModificateur($score) ?></div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label">Classe d'armure</div>
-                    <div class="stat-value"><?= $personnage->getClasseArmure() ?></div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Initiative</div>
-                    <div class="stat-value">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Vitesse</div>
-                    <div class="stat-value"><?= $personnage->getVitesse() ?> ft.</div>
-                </div>
-            </div>
-        </div>
+            </section>
 
-        <div class="actions-section">
-            <a href="/views/personnage/index.php" class="button">Retour à la liste</a>
-            <a href="/views/personnage/create.php" class="button">Créer un nouveau personnage</a>
+            <section class="combat-section">
+                <h2>Combat</h2>
+                <div class="combat-grid">
+                    <div class="combat-stat" data-tooltip="Distance de déplacement par tour">
+                        <span class="combat-icon">🏃</span>
+                        <div class="combat-value"><?= $personnage->getVitesse() ?></div>
+                        <div class="combat-label">Vitesse</div>
+                    </div>
+                    <div class="combat-stat" data-tooltip="Bonus aux attaques de corps à corps">
+                        <span class="combat-icon">⚔️</span>
+                        <div class="combat-value">+<?= $personnage->getModificateur($personnage->getForce()) ?></div>
+                        <div class="combat-label">Attaque</div>
+                    </div>
+                    <div class="combat-stat" data-tooltip="Bonus aux attaques à distance">
+                        <span class="combat-icon">🎯</span>
+                        <div class="combat-value">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></div>
+                        <div class="combat-label">Précision</div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
+
+    <script>
+    function confirmDelete(id) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce personnage ? Cette action est irréversible.')) {
+            window.location.href = `/actions/personnage/delete.php?id=${id}`;
+        }
+    }
+
+    // Animation des cartes au survol
+    document.querySelectorAll('.ability-card, .combat-stat, .vital-stat').forEach(card => {
+        card.addEventListener('mouseover', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        card.addEventListener('mouseout', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    </script>
 </body>
 </html> 

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../../config.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
 use App\Classes\ClasseFactory;
@@ -36,9 +36,9 @@ if (isset($_GET['classe'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Classes</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/cards.css">
-    <link rel="stylesheet" href="/css/classes.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/style.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/cards.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/classes.css">
 </head>
 <body>
     <div class="classes-container">
@@ -46,7 +46,7 @@ if (isset($_GET['classe'])) {
             <div class="header-content">
                 <h1>Classes de Personnages</h1>
                 <div class="header-actions">
-                    <a href="/views/classe/create.php" class="button primary">Créer une classe</a>
+                    <a href="/php-patron-pnj/public/views/classe/create.php" class="button primary">Créer une classe</a>
                 </div>
             </div>
         </div>
@@ -74,8 +74,8 @@ if (isset($_GET['classe'])) {
         </div>
 
         <div class="actions">
-            <a href="/views/personnage/create.php" class="button">Créer un personnage</a>
-            <a href="/views/personnage/index.php" class="button">Voir tous les personnages</a>
+            <a href="/php-patron-pnj/public/views/personnage/create.php" class="button">Créer un personnage</a>
+            <a href="/php-patron-pnj/public/views/personnage/index.php" class="button">Voir tous les personnages</a>
         </div>
     </div>
 

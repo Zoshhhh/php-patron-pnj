@@ -1,0 +1,24 @@
+RewriteEngine On
+RewriteBase /php-patron-pnj/
+
+# Autoriser l'accès à tous les fichiers
+Require all granted
+
+# Rediriger toutes les requêtes vers le fichier index.php sauf si le fichier ou le répertoire existe
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Permettre l'accès aux fichiers CSS et autres ressources statiques
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico)$">
+    Require all granted
+</FilesMatch>
+
+# Définir l'index par défaut
+DirectoryIndex index.php
+
+# Empêcher l'affichage du contenu des répertoires
+Options -Indexes
+
+# Définir le charset par défaut
+AddDefaultCharset UTF-8 

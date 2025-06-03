@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../../config.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
 use App\Classes\ClasseFactory;
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         $_SESSION['classes'][] = $nouvelleClasse;
-        header('Location: classes.php');
+        header('Location: /views/classe/index.php');
         exit;
     } else {
         $error = 'Le nom et la description sont requis';
@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Créer une Classe</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/classes.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/style.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/classes.css">
 </head>
 <body>
     <div class="creation-form">
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="alert error"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="/actions/classe/create.php" class="character-form">
+        <form method="POST" action="/php-patron-pnj/public/actions/classe/create.php" class="character-form">
             <div class="form-group">
                 <label for="nom">Nom de la classe</label>
                 <input type="text" id="nom" name="nom" required>
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-actions">
-                <a href="/views/classe/index.php" class="button">Annuler</a>
+                <a href="/php-patron-pnj/public/views/classe/index.php" class="button">Annuler</a>
                 <button type="submit" class="button primary">Créer la classe</button>
             </div>
         </form>

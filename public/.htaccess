@@ -1,0 +1,17 @@
+RewriteEngine On
+RewriteBase /php-patron-pnj/public/
+
+# Permettre l'accès direct aux fichiers existants
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rediriger les requêtes vers index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Permettre l'accès aux ressources statiques
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico)$">
+    Require all granted
+</FilesMatch>
+
+# Définir le charset par défaut
+AddDefaultCharset UTF-8 

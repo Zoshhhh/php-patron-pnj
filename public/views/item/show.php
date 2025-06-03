@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '/../../../autoload.php';
+session_start();
+require_once __DIR__ . '/../../../config.php';
+require_once ROOT_PATH . '/vendor/autoload.php';
 
 use App\Item\CombatItem;
 use App\Item\ConsumableItem;
 use App\Item\EquipmentItem;
-
-session_start();
 
 if (!isset($_SESSION['items'])) {
     $_SESSION['items'] = [];
@@ -18,7 +18,8 @@ if (!isset($_SESSION['items'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Items</title>
-    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/style.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/items.css">
     <style>
         .items-table {
             width: 100%;
@@ -52,8 +53,11 @@ if (!isset($_SESSION['items'])) {
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Liste des Items</h1>
+    <div class="items-list">
+        <nav class="items-nav">
+            <a href="/php-patron-pnj/public/views/personnage/index.php" class="nav-link">← Retour</a>
+            <h1>Liste des Items</h1>
+        </nav>
 
         <div class="filter-section">
             <select id="typeFilter">
@@ -125,7 +129,6 @@ if (!isset($_SESSION['items'])) {
 
             <div class="actions" style="margin-top: 20px;">
                 <a href="/views/item/create.php" class="button primary">Créer un nouvel item</a>
-                <a href="/views/personnage/index.php" class="button">Retour</a>
             </div>
         <?php endif; ?>
     </div>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../../config.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
 use App\Fabrique\FabriquePersonnage;
@@ -28,16 +28,16 @@ $personnage = match($persoData['classe']) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($personnage->getNom()) ?> - Fiche de personnage</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/details.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/style.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/details.css">
 </head>
 <body>
     <div class="character-sheet">
         <nav class="character-nav">
             <div class="nav-group">
-                <a href="/views/personnage/index.php" class="nav-link">← Retour</a>
+                <a href="/php-patron-pnj/public/views/personnage/index.php" class="nav-link">← Retour</a>
                 <span class="nav-separator">/</span>
-                <a href="/views/personnage/create.php" class="nav-link">Nouveau</a>
+                <a href="/php-patron-pnj/public/views/personnage/create.php" class="nav-link">Nouveau</a>
             </div>
             <div class="nav-category <?= htmlspecialchars($persoData['categorie'] ?? 'personnage') ?>">
                 <?= ucfirst($persoData['categorie'] ?? 'personnage') ?>

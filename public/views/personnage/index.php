@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../../../autoload.php';
+require_once __DIR__ . '/../../../config.php';
+require_once ROOT_PATH . '/vendor/autoload.php';
 session_start();
 
 if (!isset($_SESSION['personnages'])) {
@@ -23,8 +24,8 @@ if (isset($_GET['supprimer'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Personnages</title>
-    <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/cards.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/style.css">
+    <link rel="stylesheet" href="/php-patron-pnj/public/css/cards.css">
 </head>
 <body>
     <div class="characters-list">
@@ -97,11 +98,11 @@ if (isset($_GET['supprimer'])) {
         <?php endif; ?>
 
         <div class="actions">
-            <a href="/views/personnage/create.php" class="button primary">Créer un nouveau personnage</a>
-            <a href="/views/item/create.php" class="button primary">Créer un nouvel item</a>
-            <a href="/views/item/show.php" class="button">Voir les items</a>
-            <a href="/views/classe/create.php" class="button">Créer une classe</a>
-            <a href="/views/classe/index.php" class="button">Voir les classes</a>
+            <a href="/php-patron-pnj/public/views/personnage/create.php" class="button primary">Créer un nouveau personnage</a>
+            <a href="/php-patron-pnj/public/views/item/create.php" class="button primary">Créer un nouvel item</a>
+            <a href="/php-patron-pnj/public/views/item/show.php" class="button">Voir les items</a>
+            <a href="/php-patron-pnj/public/views/classe/create.php" class="button">Créer une classe</a>
+            <a href="/php-patron-pnj/public/views/classe/index.php" class="button">Voir les classes</a>
         </div>
     </div>
 

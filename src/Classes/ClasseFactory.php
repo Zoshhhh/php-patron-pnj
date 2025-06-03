@@ -4,9 +4,30 @@ namespace App\Classes;
 
 class ClasseFactory {
     private array $classes = [];
+    private string $dataFile;
 
     public function __construct() {
-        $this->registerDefaultClasses();
+        $this->dataFile = __DIR__ . '/../../data/classes.json';
+        $this->loadClasses();
+        if (empty($this->classes)) {
+            $this->registerDefaultClasses();
+            $this->saveClasses();
+        }
+    }
+
+    private function loadClasses(): void {
+        if (file_exists($this->dataFile)) {
+            $data = file_get_contents($this->dataFile);
+            $this->classes = json_decode($data, true) ?? [];
+        }
+    }
+
+    private function saveClasses(): void {
+        $dir = dirname($this->dataFile);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        file_put_contents($this->dataFile, json_encode($this->classes, JSON_PRETTY_PRINT));
     }
 
     private function registerDefaultClasses(): void {
@@ -97,5 +118,24 @@ class ClasseFactory {
         }
 
         return $this->classes[$classeId];
+    }
+
+    public function saveClasse(array $classeData): void {
+        // Génère un ID unique basé sur le nom
+        $id = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $classeData['name']));
+        
+        // Vérifie si l'ID existe déjà et ajoute un suffixe si nécessaire
+        $baseId = $id;
+        $counter = 1;
+        while (isset($this->classes[$id])) {
+            $id = $baseId . $counter;
+            $counter++;
+        }
+
+        // Ajoute la classe
+        $this->classes[$id] = $classeData;
+        
+        // Sauvegarde dans le fichier
+        $this->saveClasses();
     }
 } 

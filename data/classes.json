@@ -1,0 +1,90 @@
+{
+    "guerrier": {
+        "name": "Guerrier",
+        "type": "Combat",
+        "description": "Ma\u00eetre du combat rapproch\u00e9, expert en armes et en armures lourdes.",
+        "baseHP": 12,
+        "hitDie": 10,
+        "baseAC": 16,
+        "proficiencies": [
+            "Armes de corps \u00e0 corps",
+            "Armures lourdes",
+            "Boucliers",
+            "Athl\u00e9tisme",
+            "Intimidation"
+        ],
+        "stats": {
+            "force": 15,
+            "dexterite": 12,
+            "constitution": 14,
+            "intelligence": 8,
+            "sagesse": 10,
+            "charisme": 10
+        }
+    },
+    "archer": {
+        "name": "Archer",
+        "type": "Distance",
+        "description": "Expert du combat \u00e0 distance, ma\u00eetre de la pr\u00e9cision et de la mobilit\u00e9.",
+        "baseHP": 10,
+        "hitDie": 8,
+        "baseAC": 14,
+        "proficiencies": [
+            "Armes \u00e0 distance",
+            "Armures l\u00e9g\u00e8res",
+            "Acrobaties",
+            "Furtivit\u00e9",
+            "Perception"
+        ],
+        "stats": {
+            "force": 10,
+            "dexterite": 15,
+            "constitution": 12,
+            "intelligence": 10,
+            "sagesse": 14,
+            "charisme": 8
+        }
+    },
+    "mage": {
+        "name": "Mage",
+        "type": "Arcanes",
+        "description": "Manipulateur des arcanes, capable de lancer des sorts d\u00e9vastateurs.",
+        "baseHP": 8,
+        "hitDie": 6,
+        "baseAC": 12,
+        "proficiencies": [
+            "B\u00e2tons",
+            "Dagues",
+            "Arcanes",
+            "Histoire",
+            "Investigation"
+        ],
+        "stats": {
+            "force": 8,
+            "dexterite": 10,
+            "constitution": 12,
+            "intelligence": 15,
+            "sagesse": 14,
+            "charisme": 10
+        }
+    },
+    "test": {
+        "name": "test",
+        "type": "Combat",
+        "description": "test",
+        "baseHP": 10,
+        "hitDie": 6,
+        "baseAC": 10,
+        "stats": {
+            "force": 10,
+            "dexterite": 10,
+            "constitution": 10,
+            "intelligence": 10,
+            "sagesse": 10,
+            "charisme": 10
+        },
+        "proficiencies": [
+            "Epee longue"
+        ]
+    }
+}

@@ -3,42 +3,25 @@ session_start();
 require_once __DIR__ . '/../../../config.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
+use App\Fabrique\FabriquePersonnage;
+use App\Classes\ClasseFactory;
+
 if (!isset($_SESSION['personnages'])) {
     $_SESSION['personnages'] = [];
 }
 
-use App\Fabrique\FabriquePersonnage;
+$fabrique = new FabriquePersonnage();
+$classeFactory = new ClasseFactory();
 
-$message = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $fabrique = new FabriquePersonnage();
-    
-    $nom = $_POST['nom'] ?? '';
-    $classe = $_POST['classe'] ?? 'guerrier';
-    $categorie = $_POST['categorie'] ?? 'personnage';
-    
-    if ($nom) {
-        $stats = [];    
-        foreach (['force', 'dexterite', 'constitution', 'intelligence', 'sagesse', 'charisme', 'pointsDeVie', 'classeArmure', 'vitesse'] as $stat) {
-            if (isset($_POST[$stat])) {
-                $stats[$stat] = (int)$_POST[$stat];
-            }
-        }
+// Récupération des classes disponibles
+$classes = $classeFactory->getAvailableClasses();
 
-        $_SESSION['personnages'][] = [
-            'nom' => $nom,
-            'classe' => $classe,
-            'categorie' => $categorie,
-            'stats' => $stats
-        ];
+// Récupération des messages
+$error = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+unset($_SESSION['error'], $_SESSION['success']);
 
-        header('Location: ./index.php');
-        exit;
-    } else {
-        $message = 'Le nom est requis';
-    }
-}
-
+// Stats par défaut pour chaque classe
 $statsDefaut = [
     'guerrier' => [
         'force' => 16, 'dexterite' => 14, 'constitution' => 12,
@@ -69,8 +52,12 @@ $statsDefaut = [
             <h1>Créer un Personnage</h1>
         </nav>
 
-        <?php if ($message): ?>
-            <div class="alert"><?= htmlspecialchars($message) ?></div>
+        <?php if ($error): ?>
+            <div class="alert error"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="alert success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
         <form method="POST" action="/php-patron-pnj/public/actions/personnage/create.php" class="character-form">
@@ -83,8 +70,11 @@ $statsDefaut = [
                 <div class="form-group">
                     <label for="classe">Classe</label>
                     <select id="classe" name="classe" onchange="updateDefaultStats()">
-                        <option value="guerrier">Guerrier</option>
-                        <option value="archer">Archer</option>
+                        <?php foreach ($classes as $classe): ?>
+                            <option value="<?= htmlspecialchars($classe['id']) ?>">
+                                <?= htmlspecialchars($classe['nom']) ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -149,7 +139,8 @@ $statsDefaut = [
             </div>
 
             <div class="form-actions">
-                <button type="submit">Créer</button>
+                <button type="submit" class="button primary">Créer le personnage</button>
+                <button type="reset" class="button secondary">Réinitialiser</button>
             </div>
         </form>
     </div>
@@ -161,10 +152,12 @@ $statsDefaut = [
         const classe = document.getElementById('classe').value;
         const stats = statsDefaut[classe];
         
-        for (const [stat, value] of Object.entries(stats)) {
-            const input = document.getElementById(stat);
-            if (input) {
-                input.value = value;
+        if (stats) {
+            for (const [stat, value] of Object.entries(stats)) {
+                const input = document.getElementById(stat);
+                if (input) {
+                    input.value = value;
+                }
             }
         }
     }

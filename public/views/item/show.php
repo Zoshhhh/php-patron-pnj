@@ -1,5 +1,10 @@
 <?php
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../../autoload.php';
+
+use App\Item\CombatItem;
+use App\Item\ConsumableItem;
+use App\Item\EquipmentItem;
+
 session_start();
 
 if (!isset($_SESSION['items'])) {
@@ -79,29 +84,32 @@ if (!isset($_SESSION['items'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($_SESSION['items'] as $index => $item): ?>
-                        <tr data-type="<?= $item['type'] ?>">
-                            <td><?= htmlspecialchars($item['name']) ?></td>
-                            <td class="type-<?= $item['type'] ?>">
-                                <?= ITEM_TYPES[$item['type']]['name'] ?>
+                    <?php foreach ($_SESSION['items'] as $index => $item): 
+                        $type = match(true) {
+                            $item instanceof CombatItem => 'combat',
+                            $item instanceof ConsumableItem => 'consommable',
+                            $item instanceof EquipmentItem => 'equipement',
+                            default => 'unknown'
+                        };
+                    ?>
+                        <tr data-type="<?= $type ?>">
+                            <td><?= htmlspecialchars($item->getName()) ?></td>
+                            <td class="type-<?= $type ?>">
+                                <?= ITEM_TYPES[$type]['name'] ?>
                             </td>
-                            <td><?= htmlspecialchars($item['description']) ?></td>
-                            <td><?= $item['value'] ?> pièces</td>
+                            <td><?= htmlspecialchars($item->getDescription()) ?></td>
+                            <td><?= $item->getValue() ?> pièces</td>
                             <td>
-                                <?php switch($item['type']):
-                                    case 'combat': ?>
-                                        Dégâts: <?= $item['damage'] ?><br>
-                                        Durabilité: <?= $item['durability'] ?>
-                                        <?php break;
-                                    case 'consommable': ?>
-                                        Soin: <?= $item['healAmount'] ?><br>
-                                        <?= $item['isStackable'] ? 'Empilable' : 'Non empilable' ?>
-                                        <?php break;
-                                    case 'equipement': ?>
-                                        Défense: <?= $item['defense'] ?><br>
-                                        Emplacement: <?= EQUIPMENT_SLOTS[$item['slot']] ?>
-                                        <?php break;
-                                endswitch; ?>
+                                <?php if ($item instanceof CombatItem): ?>
+                                    Dégâts: <?= $item->getDamage() ?><br>
+                                    Durabilité: <?= $item->getDurability() ?>
+                                <?php elseif ($item instanceof ConsumableItem): ?>
+                                    Soin: <?= $item->getHealAmount() ?><br>
+                                    <?= $item->isStackable() ? 'Empilable' : 'Non empilable' ?>
+                                <?php elseif ($item instanceof EquipmentItem): ?>
+                                    Défense: <?= $item->getDefense() ?><br>
+                                    Emplacement: <?= EQUIPMENT_SLOTS[$item->getSlot()] ?>
+                                <?php endif; ?>
                             </td>
                             <td class="actions">
                                 <a href="/actions/item/delete.php?id=<?= $index ?>" 

@@ -1,6 +1,11 @@
 <?php
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../../autoload.php';
+
+use App\Item\ItemFactory;
+
 session_start();
+
+$factory = new ItemFactory();
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +67,7 @@ session_start();
             </div>
 
             <!-- Champs spécifiques pour les items de Combat -->
-            <div id="combatFields" class="form-section specific-fields" style="display: none;">
+            <div id="combatFields" class="form-section specific-fields">
                 <h2>Propriétés de combat</h2>
                 <div class="form-row">
                     <div class="form-group">
@@ -87,7 +92,7 @@ session_start();
             </div>
 
             <!-- Champs spécifiques pour les Consommables -->
-            <div id="consommableFields" class="form-section specific-fields" style="display: none;">
+            <div id="consommableFields" class="form-section specific-fields">
                 <h2>Propriétés de consommable</h2>
                 <div class="form-row">
                     <div class="form-group">
@@ -109,7 +114,7 @@ session_start();
             </div>
 
             <!-- Champs spécifiques pour l'Équipement -->
-            <div id="equipementFields" class="form-section specific-fields" style="display: none;">
+            <div id="equipementFields" class="form-section specific-fields">
                 <h2>Propriétés d'équipement</h2>
                 <div class="form-row">
                     <div class="form-group">
@@ -131,6 +136,15 @@ session_start();
                     </div>
                 </div>
             </div>
+
+            <style>
+            .specific-fields {
+                display: none;
+            }
+            .specific-fields.active {
+                display: block;
+            }
+            </style>
 
             <div class="form-actions">
                 <button type="submit" class="button primary">
@@ -160,154 +174,205 @@ session_start();
     </div>
 
     <script>
-    // Gestion de l'affichage des champs spécifiques
-    document.querySelectorAll('input[name="itemType"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            // Désactiver tous les champs spécifiques
-            document.querySelectorAll('.specific-fields').forEach(fields => {
-                fields.classList.remove('active');
-                fields.querySelectorAll('input, select').forEach(input => {
-                    input.disabled = true;
-                    input.required = false;
-                });
-            });
+    document.addEventListener('DOMContentLoaded', function() {
+        const previewName = document.getElementById('previewName');
+        const previewDescription = document.getElementById('previewDescription');
+        const previewType = document.getElementById('previewType');
+        const previewValue = document.getElementById('previewValue');
+        const previewStats = document.getElementById('previewStats');
+        const form = document.getElementById('itemForm');
 
-            if (this.value) {
+        // Gestion de l'affichage des champs spécifiques
+        document.querySelectorAll('input[name="itemType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Désactiver tous les champs spécifiques
+                document.querySelectorAll('.specific-fields').forEach(fields => {
+                    if (fields) {
+                        fields.classList.remove('active');
+                        fields.querySelectorAll('input, select').forEach(input => {
+                            if (input) {
+                                input.required = false;
+                                input.disabled = true;
+                            }
+                        });
+                    }
+                });
+
+                // Activer les champs du type sélectionné
                 const fieldsElement = document.getElementById(this.value + 'Fields');
                 if (fieldsElement) {
                     fieldsElement.classList.add('active');
                     fieldsElement.querySelectorAll('input, select').forEach(input => {
-                        input.disabled = false;
-                        input.required = true;
+                        if (input) {
+                            if (input.type !== 'checkbox') {
+                                input.required = true;
+                            }
+                            input.disabled = false;
+                        }
                     });
                 }
-            }
-            
-            previewType.textContent = this.closest('.type-option').querySelector('.type-name').textContent;
-            updatePreviewStats();
+                
+                const typeNameElement = this.closest('.type-option')?.querySelector('.type-name');
+                if (previewType && typeNameElement) {
+                    previewType.textContent = typeNameElement.textContent;
+                }
+                updatePreviewStats();
+            });
         });
-    });
 
-    // Mise à jour de la prévisualisation en temps réel
-    const previewName = document.getElementById('previewName');
-    const previewDescription = document.getElementById('previewDescription');
-    const previewType = document.getElementById('previewType');
-    const previewValue = document.getElementById('previewValue');
-    const previewStats = document.getElementById('previewStats');
+        // Mise à jour de la prévisualisation en temps réel
+        const nameInput = document.getElementById('name');
+        const descriptionInput = document.getElementById('description');
+        const valueInput = document.getElementById('value');
 
-    document.getElementById('name').addEventListener('input', e => {
-        previewName.textContent = e.target.value || 'Nom de l\'item';
-    });
-
-    document.getElementById('description').addEventListener('input', e => {
-        previewDescription.textContent = e.target.value || 'Description de l\'item...';
-    });
-
-    document.getElementById('value').addEventListener('input', e => {
-        previewValue.textContent = `${e.target.value || 0} 💰`;
-    });
-
-    // Mise à jour des stats spécifiques
-    function updatePreviewStats() {
-        const stats = [];
-        const type = document.querySelector('input[name="itemType"]:checked')?.value;
-
-        if (type === 'combat') {
-            const damage = document.getElementById('damage').value;
-            const durability = document.getElementById('durability').value;
-            if (damage) stats.push(`⚔️ ${damage} dégâts`);
-            if (durability) stats.push(`🛡️ ${durability} durabilité`);
-        } else if (type === 'consommable') {
-            const heal = document.getElementById('healAmount').value;
-            const stackable = document.getElementById('isStackable').checked;
-            if (heal) stats.push(`❤️ +${heal} PV`);
-            if (stackable) stats.push(`📦 Empilable`);
-        } else if (type === 'equipement') {
-            const defense = document.getElementById('defense').value;
-            const slot = document.getElementById('slot');
-            if (defense) stats.push(`🛡️ ${defense} défense`);
-            if (slot.value) stats.push(`📍 ${slot.options[slot.selectedIndex].text}`);
+        if (nameInput && previewName) {
+            nameInput.addEventListener('input', e => {
+                previewName.textContent = e.target.value || 'Nom de l\'item';
+            });
         }
 
-        previewStats.innerHTML = stats.map(stat => `<div class="preview-stat">${stat}</div>`).join('');
-    }
-
-    // Écouter les changements sur tous les champs pour mettre à jour la prévisualisation
-    document.querySelectorAll('input, select, textarea').forEach(input => {
-        input.addEventListener('input', updatePreviewStats);
-        input.addEventListener('change', updatePreviewStats);
-    });
-
-    const defaultValues = <?= json_encode(DEFAULT_ITEM_VALUES) ?>;
-    
-    document.getElementById('itemForm').addEventListener('reset', function() {
-        setTimeout(() => {
-            Object.keys(defaultValues).forEach(field => {
-                const element = document.getElementById(field);
-                if (element) {
-                    if (element.type === 'checkbox') {
-                        element.checked = defaultValues[field];
-                    } else {
-                        element.value = defaultValues[field];
-                    }
-                }
+        if (descriptionInput && previewDescription) {
+            descriptionInput.addEventListener('input', e => {
+                previewDescription.textContent = e.target.value || 'Description de l\'item...';
             });
-            
-            // Réinitialiser la prévisualisation
-            previewName.textContent = 'Nom de l\'item';
-            previewDescription.textContent = 'Description de l\'item...';
-            previewValue.textContent = '0 💰';
-            previewStats.innerHTML = '';
-            previewType.textContent = 'Type';
-        }, 0);
-    });
+        }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Déclencher l'événement change sur le type par défaut
+        if (valueInput && previewValue) {
+            valueInput.addEventListener('input', e => {
+                previewValue.textContent = `${e.target.value || 0} 💰`;
+            });
+        }
+
+        // Mise à jour des stats spécifiques
+        function updatePreviewStats() {
+            if (!previewStats) return;
+
+            const stats = [];
+            const type = document.querySelector('input[name="itemType"]:checked')?.value;
+
+            if (type === 'combat') {
+                const damage = document.getElementById('damage')?.value;
+                const durability = document.getElementById('durability')?.value;
+                if (damage) stats.push(`⚔️ ${damage} dégâts`);
+                if (durability) stats.push(`🛡️ ${durability} durabilité`);
+            } else if (type === 'consommable') {
+                const heal = document.getElementById('healAmount')?.value;
+                const stackable = document.getElementById('isStackable')?.checked;
+                if (heal) stats.push(`❤️ +${heal} PV`);
+                if (stackable) stats.push(`📦 Empilable`);
+            } else if (type === 'equipement') {
+                const defense = document.getElementById('defense')?.value;
+                const slot = document.getElementById('slot');
+                if (defense) stats.push(`🛡️ ${defense} défense`);
+                if (slot?.value) stats.push(`📍 ${slot.options[slot.selectedIndex].text}`);
+            }
+
+            previewStats.innerHTML = stats.map(stat => `<div class="preview-stat">${stat}</div>`).join('');
+        }
+
+        // Écouter les changements sur tous les champs pour mettre à jour la prévisualisation
+        document.querySelectorAll('input, select, textarea').forEach(input => {
+            if (input) {
+                input.addEventListener('input', updatePreviewStats);
+                input.addEventListener('change', updatePreviewStats);
+            }
+        });
+
+        // Gestion de la réinitialisation du formulaire
+        if (form) {
+            form.addEventListener('reset', function() {
+                setTimeout(() => {
+                    const defaultValues = <?= json_encode(DEFAULT_ITEM_VALUES) ?>;
+                    Object.keys(defaultValues).forEach(field => {
+                        const element = document.getElementById(field);
+                        if (element) {
+                            if (element.type === 'checkbox') {
+                                element.checked = defaultValues[field];
+                            } else {
+                                element.value = defaultValues[field];
+                            }
+                        }
+                    });
+                    
+                    // Réinitialiser la prévisualisation
+                    if (previewName) previewName.textContent = 'Nom de l\'item';
+                    if (previewDescription) previewDescription.textContent = 'Description de l\'item...';
+                    if (previewValue) previewValue.textContent = '0 💰';
+                    if (previewStats) previewStats.innerHTML = '';
+                    if (previewType) previewType.textContent = 'Type';
+                }, 0);
+            });
+        }
+
+        // Activer le type par défaut au chargement
         const defaultType = document.querySelector('input[name="itemType"]:checked');
         if (defaultType) {
             defaultType.dispatchEvent(new Event('change'));
-            previewType.textContent = defaultType.closest('.type-option').querySelector('.type-name').textContent;
         }
-    });
 
-    // Amélioration de la validation du formulaire
-    document.getElementById('itemForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Vérifier les champs requis
-        const requiredFields = this.querySelectorAll('input[required]:not(:disabled), select[required]:not(:disabled), textarea[required]');
-        let isValid = true;
-        
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                isValid = false;
-                field.classList.add('error');
+        // Amélioration de la validation du formulaire
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
                 
-                // Ajouter un message d'erreur
-                const errorMsg = field.parentNode.querySelector('.error-message');
-                if (!errorMsg) {
-                    const msg = document.createElement('div');
-                    msg.className = 'error-message';
-                    msg.textContent = 'Ce champ est requis';
-                    field.parentNode.appendChild(msg);
+                // Vérifier les champs requis
+                const requiredFields = this.querySelectorAll('input[required]:not(:disabled), select[required]:not(:disabled), textarea[required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    if (field && !field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('error');
+                        
+                        // Ajouter un message d'erreur
+                        const errorMsg = field.parentNode.querySelector('.error-message');
+                        if (!errorMsg) {
+                            const msg = document.createElement('div');
+                            msg.className = 'error-message';
+                            msg.textContent = 'Ce champ est requis';
+                            field.parentNode.appendChild(msg);
+                        }
+                    }
+                });
+                
+                if (isValid) {
+                    this.submit();
                 }
+            });
+        }
+
+        // Supprimer les messages d'erreur lors de la saisie
+        document.querySelectorAll('.form-input').forEach(input => {
+            if (input) {
+                input.addEventListener('input', function() {
+                    this.classList.remove('error');
+                    const errorMsg = this.parentNode.querySelector('.error-message');
+                    if (errorMsg) {
+                        errorMsg.remove();
+                    }
+                });
             }
         });
-        
-        if (isValid) {
-            this.submit();
-        }
-    });
 
-    // Supprimer les messages d'erreur lors de la saisie
-    document.querySelectorAll('.form-input').forEach(input => {
-        input.addEventListener('input', function() {
-            this.classList.remove('error');
-            const errorMsg = this.parentNode.querySelector('.error-message');
-            if (errorMsg) {
-                errorMsg.remove();
-            }
+        // Validation des champs numériques
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', function(e) {
+                let value = this.value;
+                
+                // Supprimer tout ce qui n'est pas un chiffre
+                value = value.replace(/[^0-9]/g, '');
+                
+                // Appliquer les limites min/max
+                const min = parseInt(this.getAttribute('min')) || 0;
+                const max = parseInt(this.getAttribute('max')) || Infinity;
+                value = Math.max(min, Math.min(max, parseInt(value) || 0));
+                
+                // Mettre à jour la valeur
+                this.value = value;
+                
+                // Mettre à jour la prévisualisation
+                updatePreviewStats();
+            });
         });
     });
     </script>

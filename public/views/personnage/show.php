@@ -51,8 +51,8 @@ $personnage = match($persoData['classe']) {
                     <div class="character-meta">
                         <span class="class-badge"><?= ucfirst($persoData['classe']) ?></span>
                         <span class="level-badge">Niveau 1</span>
-                    </div>
-                </div>
+            </div>
+            </div>
                 <div class="quick-actions">
                     <button type="button" class="action-button edit-button" onclick="window.location.href='/views/personnage/edit.php?id=<?= $index ?>'">
                         ✏️ Modifier
@@ -60,9 +60,9 @@ $personnage = match($persoData['classe']) {
                     <button type="button" class="action-button delete-button" onclick="confirmDelete(<?= $index ?>)">
                         🗑️ Supprimer
                     </button>
-                </div>
             </div>
-            
+        </div>
+
             <div class="vital-stats">
                 <div class="vital-stat" data-tooltip="Points de vie actuels">
                     <span class="stat-icon">❤️</span>
@@ -130,8 +130,8 @@ $personnage = match($persoData['classe']) {
                         <span class="combat-icon">🎯</span>
                         <div class="combat-value">+<?= $personnage->getModificateur($personnage->getDexterite()) ?></div>
                         <div class="combat-label">Précision</div>
-                    </div>
-                </div>
+            </div>
+        </div>
             </section>
         </div>
     </div>

@@ -1,20 +1,23 @@
 <?php
 
-define('ROOT_PATH', dirname(__DIR__));
-define('PUBLIC_PATH', __DIR__);
-define('VIEWS_PATH', __DIR__ . '/views');
+define('ROOT_PATH', __DIR__);
+define('PUBLIC_PATH', __DIR__ . '/public');
+define('VIEWS_PATH', __DIR__ . '/public/views');
 
 define('ITEM_TYPES', [
     'combat' => [
         'name' => 'Combat',
+        'icon' => '⚔️',
         'fields' => ['damage', 'durability']
     ],
     'consommable' => [
         'name' => 'Consommable',
+        'icon' => '🧪',
         'fields' => ['healAmount', 'isStackable']
     ],
     'equipement' => [
         'name' => 'Équipement',
+        'icon' => '🛡️',
         'fields' => ['defense', 'slot']
     ]
 ]);

@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../config.php';
-require_once ROOT_PATH . '\vendor\autoload.php';
+require_once ROOT_PATH . '/vendor/autoload.php';
 
 if (!isset($_SESSION['personnages'])) {
     $_SESSION['personnages'] = [];
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $categorie = $_POST['categorie'] ?? 'personnage';
     
     if ($nom) {
-        $stats = [];
+        $stats = [];    
         foreach (['force', 'dexterite', 'constitution', 'intelligence', 'sagesse', 'charisme', 'pointsDeVie', 'classeArmure', 'vitesse'] as $stat) {
             if (isset($_POST[$stat])) {
                 $stats[$stat] = (int)$_POST[$stat];

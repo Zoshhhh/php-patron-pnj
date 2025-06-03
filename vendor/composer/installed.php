@@ -3,7 +3,7 @@
         'name' => 'kevinstacchetti/php-patron-pnj',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '237c63b728a58a97b7137393d5106dc81ce4de9a',
+        'reference' => 'f41aa20b4a73d01954df8bfa818543d0f757c3b7',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'kevinstacchetti/php-patron-pnj' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '237c63b728a58a97b7137393d5106dc81ce4de9a',
+            'reference' => 'f41aa20b4a73d01954df8bfa818543d0f757c3b7',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

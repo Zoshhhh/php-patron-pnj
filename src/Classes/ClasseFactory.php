@@ -12,58 +12,79 @@ class ClasseFactory {
     private function registerDefaultClasses(): void {
         $this->classes = [
             'guerrier' => [
-                'nom' => 'Guerrier',
+                'name' => 'Guerrier',
+                'type' => 'Combat',
                 'description' => 'Maître du combat rapproché, expert en armes et en armures lourdes.',
-                'stats_base' => [
+                'baseHP' => 12,
+                'hitDie' => 10,
+                'baseAC' => 16,
+                'proficiencies' => [
+                    'Armes de corps à corps',
+                    'Armures lourdes',
+                    'Boucliers',
+                    'Athlétisme',
+                    'Intimidation'
+                ],
+                'stats' => [
                     'force' => 15,
                     'dexterite' => 12,
                     'constitution' => 14,
                     'intelligence' => 8,
                     'sagesse' => 10,
                     'charisme' => 10
-                ],
-                'competences' => ['Athlétisme', 'Intimidation', 'Corps à corps'],
-                'equipement_initial' => ['Épée longue', 'Bouclier', 'Cotte de mailles']
+                ]
             ],
             'archer' => [
-                'nom' => 'Archer',
+                'name' => 'Archer',
+                'type' => 'Distance',
                 'description' => 'Expert du combat à distance, maître de la précision et de la mobilité.',
-                'stats_base' => [
+                'baseHP' => 10,
+                'hitDie' => 8,
+                'baseAC' => 14,
+                'proficiencies' => [
+                    'Armes à distance',
+                    'Armures légères',
+                    'Acrobaties',
+                    'Furtivité',
+                    'Perception'
+                ],
+                'stats' => [
                     'force' => 10,
                     'dexterite' => 15,
                     'constitution' => 12,
                     'intelligence' => 10,
                     'sagesse' => 14,
                     'charisme' => 8
-                ],
-                'competences' => ['Acrobaties', 'Furtivité', 'Tir à l\'arc'],
-                'equipement_initial' => ['Arc long', 'Carquois', 'Dague', 'Armure de cuir']
+                ]
             ],
             'mage' => [
-                'nom' => 'Mage',
+                'name' => 'Mage',
+                'type' => 'Arcanes',
                 'description' => 'Manipulateur des arcanes, capable de lancer des sorts dévastateurs.',
-                'stats_base' => [
+                'baseHP' => 8,
+                'hitDie' => 6,
+                'baseAC' => 12,
+                'proficiencies' => [
+                    'Bâtons',
+                    'Dagues',
+                    'Arcanes',
+                    'Histoire',
+                    'Investigation'
+                ],
+                'stats' => [
                     'force' => 8,
                     'dexterite' => 10,
                     'constitution' => 12,
                     'intelligence' => 15,
                     'sagesse' => 14,
                     'charisme' => 10
-                ],
-                'competences' => ['Arcanes', 'Histoire', 'Investigation'],
-                'equipement_initial' => ['Bâton', 'Grimoire', 'Robe de mage']
+                ]
             ]
         ];
     }
 
     public function getAvailableClasses(): array {
-        return array_map(function($class) {
-            return [
-                'id' => array_search($class, $this->classes),
-                'nom' => $class['nom'],
-                'description' => $class['description']
-            ];
-        }, $this->classes);
+        return $this->classes;
     }
 
     public function getClassDetails(string $classeId): ?array {

@@ -37,138 +37,11 @@ function peutAttaquer($attaquant, $cible) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Personnages</title>
+    <link rel="stylesheet" href="../../css/fonts.css">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/cards.css">
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-
-        .modal-content {
-            background-color: #F5E6D3;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 800px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .modal-header h2 {
-            margin: 0;
-            color: #333;
-            font-size: 1.5em;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover {
-            color: black;
-        }
-
-        .target-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-            max-height: 60vh;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .target-card {
-            padding: 1.5rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background-color: white;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .target-card:not(.disabled):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-color: #007bff;
-        }
-
-        .target-card.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            background-color: #f5f5f5;
-        }
-
-        .target-card h3 {
-            margin: 0;
-            color: #333;
-            font-size: 1.2em;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 0.5rem;
-        }
-
-        .target-info {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-        }
-
-        .target-stat {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .target-stat-label {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .target-stat-value {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .target-category {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            font-weight: bold;
-        }
-
-        .target-category.personnage { background-color: #e3f2fd; color: #1565c0; }
-        .target-category.allie { background-color: #e8f5e9; color: #2e7d32; }
-        .target-category.ennemi { background-color: #ffebee; color: #c62828; }
-        .target-category.pnj { background-color: #fff3e0; color: #ef6c00; }
-    </style>
+    <link rel="stylesheet" href="../../css/modal.css">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
 </head>
 <body>
     <div class="characters-list">
@@ -249,19 +122,25 @@ function peutAttaquer($attaquant, $cible) {
                 </div>
                 <div class="target-list">
                     <?php foreach ($_SESSION['personnages'] as $index => $cible): ?>
-                        <div class="target-card" data-target-id="<?= $index ?>" data-category="<?= htmlspecialchars($cible['categorie'] ?? 'personnage') ?>">
-                            <span class="target-category <?= htmlspecialchars($cible['categorie'] ?? 'personnage') ?>">
-                                <?= ucfirst($cible['categorie'] ?? 'personnage') ?>
-                            </span>
+                        <?php 
+                        $isDisabled = !peutAttaquer($perso ?? [], $cible);
+                        $categorie = $cible['categorie'] ?? 'personnage';
+                        ?>
+                        <div class="target-card <?= $isDisabled ? 'disabled' : '' ?>" 
+                             data-target="<?= $index ?>" 
+                             onclick="<?= $isDisabled ? '' : "selectTarget($index)" ?>">
+                            <div class="target-category <?= htmlspecialchars($categorie) ?>">
+                                <?= ucfirst($categorie) ?>
+                            </div>
                             <h3><?= htmlspecialchars($cible['nom']) ?></h3>
                             <div class="target-info">
                                 <div class="target-stat">
-                                    <span class="target-stat-label">Classe:</span>
-                                    <span class="target-stat-value"><?= ucfirst($cible['classe']) ?></span>
-                                </div>
-                                <div class="target-stat">
                                     <span class="target-stat-label">PV:</span>
                                     <span class="target-stat-value"><?= $cible['stats']['pointsDeVie'] ?? 10 ?></span>
+                                </div>
+                                <div class="target-stat">
+                                    <span class="target-stat-label">CA:</span>
+                                    <span class="target-stat-value"><?= $cible['stats']['classeArmure'] ?? 10 ?></span>
                                 </div>
                                 <div class="target-stat">
                                     <span class="target-stat-label">FOR:</span>
@@ -279,121 +158,84 @@ function peutAttaquer($attaquant, $cible) {
         </div>
 
         <div class="actions">
-            <a href="/views/personnage/create.php" class="button primary">Créer un nouveau personnage</a>
-            <a href="/views/item/create.php" class="button primary">Créer un nouvel item</a>
-            <a href="/views/item/show.php" class="button">Voir les items</a>
-            <a href="/views/classe/create.php" class="button">Créer une classe</a>
-            <a href="/views/classe/index.php" class="button">Voir les classes</a>
+            <div class="action-group">
+                <a href="/views/personnage/create.php" class="button primary">Créer un personnage</a>
+                <a href="/views/classe/create.php" class="button primary">Créer une classe</a>
+                <a href="/views/item/create.php" class="button primary">Créer un item</a>
+            </div>
+            <div class="action-group">
+                <a href="/views/classe/index.php" class="button">Voir les classes</a>
+                <a href="/views/item/show.php" class="button">Voir les items</a>
+            </div>
         </div>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById('attackModal');
-        const closeBtn = modal.querySelector('.close');
-        let currentAttacker = null;
+    let currentAttacker = null;
 
-        // Gérer l'affichage/masquage des menus déroulants
-        document.querySelectorAll('.action-button').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const dropdown = this.nextElementSibling;
-                document.querySelectorAll('.dropdown-content').forEach(d => {
-                    if (d !== dropdown) d.classList.remove('show');
-                });
-                dropdown.classList.toggle('show');
-            });
+    document.querySelectorAll('[data-action="attaquer"]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentAttacker = this.dataset.character;
+            document.getElementById('attackModal').style.display = 'block';
         });
+    });
 
-        // Gérer les clics sur les actions
-        document.querySelectorAll('.action-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const action = this.dataset.action;
-                const characterId = this.dataset.character;
-                
-                if (action === 'attaquer') {
-                    currentAttacker = characterId;
-                    showAttackModal(characterId);
-                }
-                
-                this.closest('.dropdown-content').classList.remove('show');
-            });
-        });
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('attackModal').style.display = 'none';
+    });
 
-        // Fermer la modale
-        closeBtn.addEventListener('click', () => {
+    window.onclick = function(event) {
+        let modal = document.getElementById('attackModal');
+        if (event.target == modal) {
             modal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-
-        // Gérer la sélection des cibles
-        document.querySelectorAll('.target-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const targetId = this.dataset.targetId;
-                if (targetId === currentAttacker) return; // Ne peut pas s'attaquer soi-même
-                
-                // Envoyer la requête d'attaque
-                fetch('/actions/personnage/attack.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        attacker: currentAttacker,
-                        target: targetId
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log('Attaquant:', data.attacker);
-                        console.log('Cible:', data.target);
-                        modal.style.display = 'none';
-                    } else {
-                        alert(data.error || 'Une erreur est survenue');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Une erreur est survenue');
-                });
-            });
-        });
-
-        function showAttackModal(attackerId) {
-            // Désactiver les cibles non valides
-            document.querySelectorAll('.target-card').forEach(card => {
-                const targetId = card.dataset.targetId;
-                const targetCategory = card.dataset.category;
-                
-                if (targetId === attackerId) {
-                    card.classList.add('disabled');
-                } else if (targetCategory === 'allie' && document.querySelector(`[data-target-id="${attackerId}"]`).dataset.category === 'allie') {
-                    card.classList.add('disabled');
-                } else {
-                    card.classList.remove('disabled');
-                }
-            });
-            
-            modal.style.display = 'block';
         }
+    }
 
-        // Fermer les dropdowns quand on clique ailleurs
-        document.addEventListener('click', function(e) {
-            if (!e.target.matches('.action-button')) {
-                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
-                    dropdown.classList.remove('show');
-                });
+    function selectTarget(targetId) {
+        if (currentAttacker === null) return;
+        
+        fetch('/actions/combat/attack.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                attacker: currentAttacker,
+                target: targetId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert(data.error || 'Une erreur est survenue');
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Une erreur est survenue');
+        });
+
+        document.getElementById('attackModal').style.display = 'none';
+    }
+
+    // Gestion des dropdowns
+    document.querySelectorAll('.action-button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = this.nextElementSibling;
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+            dropdown.style.display = 'none';
         });
     });
     </script>
-    <script src="../../js/main.js"></script>
 </body>
 </html> 

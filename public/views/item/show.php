@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../../../autoload.php';
 
-use App\Item\CombatItem;
-use App\Item\ConsumableItem;
-use App\Item\EquipmentItem;
+use App\Model\Item\CombatItem;
+use App\Model\Item\ConsumableItem;
+use App\Model\Item\EquipmentItem;
 
 session_start();
 

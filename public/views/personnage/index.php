@@ -156,6 +156,18 @@ function peutAttaquer($attaquant, $cible) {
                 </div>
             </div>
         </div>
+
+        <div class="actions">
+            <div class="action-group">
+                <a href="/views/personnage/create.php" class="button primary">Créer un personnage</a>
+                <a href="/views/classe/create.php" class="button primary">Créer une classe</a>
+                <a href="/views/item/create.php" class="button primary">Créer un item</a>
+            </div>
+            <div class="action-group">
+                <a href="/views/classe/index.php" class="button">Voir les classes</a>
+                <a href="/views/item/show.php" class="button">Voir les items</a>
+            </div>
+        </div>
     </div>
 
     <script>

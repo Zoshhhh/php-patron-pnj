@@ -30,31 +30,24 @@ try {
         'type' => $type,
         'rarete' => 'Commun',
         'poids' => 1.0,
-        'valeur' => $value,
-        'effets' => []
+        'valeur' => $value
     ];
 
-    // Ajout des effets spécifiques selon le type
+    // Ajout des propriétés spécifiques selon le type
     switch ($type) {
         case 'combat':
-            $itemData['effets'] = [
-                'degats' => (int)($_POST['damage'] ?? 0),
-                'durabilite' => (int)($_POST['durability'] ?? 100)
-            ];
+            $itemData['degats'] = (int)($_POST['damage'] ?? 0);
+            $itemData['durabilite'] = (int)($_POST['durability'] ?? 100);
             break;
 
         case 'consommable':
-            $itemData['effets'] = [
-                'soin' => (int)($_POST['healAmount'] ?? 0),
-                'empilable' => isset($_POST['isStackable'])
-            ];
+            $itemData['soin'] = (int)($_POST['healAmount'] ?? 0);
+            $itemData['empilable'] = isset($_POST['isStackable']);
             break;
 
         case 'equipement':
-            $itemData['effets'] = [
-                'defense' => (int)($_POST['defense'] ?? 0),
-                'emplacement' => $_POST['slot'] ?? 'main'
-            ];
+            $itemData['defense'] = (int)($_POST['defense'] ?? 0);
+            $itemData['emplacement'] = $_POST['slot'] ?? 'main';
             break;
 
         default:
@@ -67,9 +60,8 @@ try {
         exit;
     }
 
-    $itemId = $factory->addCustomItem($itemData);
-    $item = new Item($factory->getItemDetails($itemId));
-    $_SESSION['items'][] = $item;
+    // Stocker directement le tableau de données
+    $_SESSION['items'][] = $itemData;
     
     $_SESSION['success'] = 'Item créé avec succès !';
     header('Location: /views/item/show.php');

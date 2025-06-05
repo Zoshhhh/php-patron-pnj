@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Strategie;
+namespace App\Model\Strategie;
 
-use App\Personnage\PersonnageInterface;
+use App\Interface\ComportementCombatInterface;
 
 class CombatADistance implements ComportementCombatInterface
 {
-    public function attaquer(PersonnageInterface $attaquant, PersonnageInterface $cible): void
+    public function attaquer(): int
     {
-        $degats = rand(1, 8) + $attaquant->getDexterite();
-        $cible->recevoirDegats($degats);
+        return rand(1, 8) + 2; // 1d8 + 2
     }
 } 

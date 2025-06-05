@@ -2,9 +2,11 @@
 
 namespace App\Interface;
 
-use App\Personnage\PersonnageInterface;
-
 interface ComportementCombatInterface
 {
-    public function attaquer(PersonnageInterface $attaquant, PersonnageInterface $cible): void;
+    /**
+     * Calcule et retourne les dégâts infligés par une attaque
+     * @return int Le montant des dégâts
+     */
+    public function attaquer(): int;
 } 

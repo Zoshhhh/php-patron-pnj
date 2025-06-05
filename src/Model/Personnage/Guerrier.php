@@ -1,31 +1,26 @@
 <?php
 
-namespace App\Personnage;
+namespace App\Model\Personnage;
 
-use App\Strategie\ComportementCombatInterface;
+use App\Interface\ComportementCombatInterface;
 
 class Guerrier extends PersonnageAbstrait
 {
-    public function __construct(
-        string $nom,
-        ComportementCombatInterface $comportementCombat,
-        array $stats = []
-    ) {
-        $statsParDefaut = [
-            'force' => 16,
-            'dexterite' => 14,
-            'constitution' => 12,
-            'intelligence' => 14,
-            'sagesse' => 14,
-            'charisme' => 12,
-            'pointsDeVie' => 20,
-            'classeArmure' => 13,
-            'vitesse' => 30,
-            'comportementCombat' => $comportementCombat
-        ];
-
-        $statsFinal = array_merge($statsParDefaut, $stats);
+    public function __construct(string $nom, ComportementCombatInterface $comportementCombat, array $stats = [])
+    {
+        parent::__construct($nom, $comportementCombat);
         
-        parent::__construct($nom, $statsFinal);
+        // Stats par défaut pour un guerrier
+        $this->force = $stats['force'] ?? 15;
+        $this->dexterite = $stats['dexterite'] ?? 12;
+        $this->constitution = $stats['constitution'] ?? 14;
+        $this->intelligence = $stats['intelligence'] ?? 8;
+        $this->sagesse = $stats['sagesse'] ?? 10;
+        $this->charisme = $stats['charisme'] ?? 10;
+        
+        // Stats de combat
+        $this->pointsDeVie = $stats['pointsDeVie'] ?? 20;
+        $this->classeArmure = $stats['classeArmure'] ?? 15;
+        $this->vitesse = $stats['vitesse'] ?? 30;
     }
 } 

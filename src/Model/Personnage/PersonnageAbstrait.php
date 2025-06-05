@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Personnage;
+namespace App\Model\Personnage;
 
-use App\Strategie\ComportementCombatInterface;
+use App\Interface\PersonnageInterface;
+use App\Interface\ComportementCombatInterface;
 
 abstract class PersonnageAbstrait implements PersonnageInterface
 {
@@ -18,26 +19,16 @@ abstract class PersonnageAbstrait implements PersonnageInterface
     protected int $vitesse;
     protected ComportementCombatInterface $comportementCombat;
 
-    public function __construct(
-        string $nom,
-        array $stats = []
-    ) {
+    public function __construct(string $nom, ComportementCombatInterface $comportementCombat)
+    {
         $this->nom = $nom;
-        $this->force = $stats['force'] ?? 10;
-        $this->dexterite = $stats['dexterite'] ?? 10;
-        $this->constitution = $stats['constitution'] ?? 10;
-        $this->intelligence = $stats['intelligence'] ?? 10;
-        $this->sagesse = $stats['sagesse'] ?? 10;
-        $this->charisme = $stats['charisme'] ?? 10;
-        $this->pointsDeVie = $stats['pointsDeVie'] ?? 10;
-        $this->classeArmure = $stats['classeArmure'] ?? 10;
-        $this->vitesse = $stats['vitesse'] ?? 30;
-        $this->comportementCombat = $stats['comportementCombat'];
+        $this->comportementCombat = $comportementCombat;
     }
 
     public function attaquer(PersonnageInterface $cible): void
     {
-        $this->comportementCombat->attaquer($this, $cible);
+        $degats = $this->comportementCombat->attaquer();
+        $cible->recevoirDegats($degats);
     }
 
     public function recevoirDegats(int $degats): void
@@ -100,13 +91,8 @@ abstract class PersonnageAbstrait implements PersonnageInterface
         return $this->vitesse;
     }
 
-    public function getModificateur(int $valeur): int
+    public function getModificateur(int $valeurCaracteristique): int
     {
-        return floor(($valeur - 10) / 2);
-    }
-
-    public function setComportementCombat(ComportementCombatInterface $comportementCombat): void
-    {
-        $this->comportementCombat = $comportementCombat;
+        return (int) floor(($valeurCaracteristique - 10) / 2);
     }
 } 

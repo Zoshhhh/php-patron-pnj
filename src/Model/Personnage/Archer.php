@@ -1,31 +1,26 @@
 <?php
 
-namespace App\Personnage;
+namespace App\Model\Personnage;
 
-use App\Strategie\ComportementCombatInterface;
+use App\Interface\ComportementCombatInterface;
 
 class Archer extends PersonnageAbstrait
 {
-    public function __construct(
-        string $nom,
-        ComportementCombatInterface $comportementCombat,
-        array $stats = []
-    ) {
-        $statsParDefaut = [
-            'force' => 12,
-            'dexterite' => 16,
-            'constitution' => 12,
-            'intelligence' => 14,
-            'sagesse' => 14,
-            'charisme' => 12,
-            'pointsDeVie' => 15,
-            'classeArmure' => 14,
-            'vitesse' => 35,
-            'comportementCombat' => $comportementCombat
-        ];
-
-        $statsFinal = array_merge($statsParDefaut, $stats);
+    public function __construct(string $nom, ComportementCombatInterface $comportementCombat, array $stats = [])
+    {
+        parent::__construct($nom, $comportementCombat);
         
-        parent::__construct($nom, $statsFinal);
+        // Stats par défaut pour un archer
+        $this->force = $stats['force'] ?? 10;
+        $this->dexterite = $stats['dexterite'] ?? 15;
+        $this->constitution = $stats['constitution'] ?? 12;
+        $this->intelligence = $stats['intelligence'] ?? 10;
+        $this->sagesse = $stats['sagesse'] ?? 14;
+        $this->charisme = $stats['charisme'] ?? 8;
+        
+        // Stats de combat
+        $this->pointsDeVie = $stats['pointsDeVie'] ?? 15;
+        $this->classeArmure = $stats['classeArmure'] ?? 14;
+        $this->vitesse = $stats['vitesse'] ?? 35;
     }
 } 

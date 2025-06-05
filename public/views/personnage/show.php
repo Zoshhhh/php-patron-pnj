@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../../config.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
-use App\Fabrique\FabriquePersonnage;
+use App\Factory\PersonnageFactory;
 
 $index = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
@@ -13,7 +13,7 @@ if ($index === null || !isset($_SESSION['personnages'][$index])) {
 }
 
 $persoData = $_SESSION['personnages'][$index];
-$fabrique = new FabriquePersonnage();
+$fabrique = new PersonnageFactory();
 
 $personnage = match($persoData['classe']) {
     'guerrier' => $fabrique->creerGuerrier($persoData['nom'], $persoData['stats']),

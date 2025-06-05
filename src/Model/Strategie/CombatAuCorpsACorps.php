@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Strategie;
+namespace App\Model\Strategie;
 
-use App\Personnage\PersonnageInterface;
+use App\Interface\ComportementCombatInterface;
 
 class CombatAuCorpsACorps implements ComportementCombatInterface
 {
-    public function attaquer(PersonnageInterface $attaquant, PersonnageInterface $cible): void
+    public function attaquer(): int
     {
-        $degats = rand(1, 6) + $attaquant->getForce();
-        $cible->recevoirDegats($degats);
+        return rand(1, 10) + 3; // 1d10 + 3
     }
 } 

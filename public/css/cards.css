@@ -39,13 +39,29 @@
     gap: 16px;
     margin: 20px 0;
     padding: 16px;
+<<<<<<< Updated upstream
     background: #faf7f2;
     border-radius: 8px;
     border: 1px solid rgba(0,0,0,0.03);
+=======
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--accent-color);
+>>>>>>> Stashed changes
 }
 
 .stat {
     text-align: center;
+<<<<<<< Updated upstream
+=======
+    padding: 8px;
+    background: white;
+    border-radius: calc(var(--border-radius) - 2px);
+    border: 1px solid var(--accent-color);
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1.1em;
+>>>>>>> Stashed changes
 }
 
 .stat span {

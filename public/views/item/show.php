@@ -1,9 +1,8 @@
 <?php
-require_once __DIR__ . '/../../../autoload.php';
+require_once __DIR__ . '/../../../config.php';
+require_once ROOT_PATH . '/vendor/autoload.php';
 
-use App\Model\Item\CombatItem;
-use App\Model\Item\ConsumableItem;
-use App\Model\Item\EquipmentItem;
+use App\Model\Item\Item;
 
 session_start();
 
@@ -84,32 +83,25 @@ if (!isset($_SESSION['items'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($_SESSION['items'] as $index => $item): 
-                        $type = match(true) {
-                            $item instanceof CombatItem => 'combat',
-                            $item instanceof ConsumableItem => 'consommable',
-                            $item instanceof EquipmentItem => 'equipement',
-                            default => 'unknown'
-                        };
-                    ?>
-                        <tr data-type="<?= $type ?>">
-                            <td><?= htmlspecialchars($item->getName()) ?></td>
-                            <td class="type-<?= $type ?>">
-                                <?= ITEM_TYPES[$type]['name'] ?>
+                    <?php foreach ($_SESSION['items'] as $index => $item): ?>
+                        <tr data-type="<?= htmlspecialchars($item->getType()) ?>">
+                            <td><?= htmlspecialchars($item->getNom()) ?></td>
+                            <td class="type-<?= htmlspecialchars($item->getType()) ?>">
+                                <?= ITEM_TYPES[$item->getType()]['name'] ?? $item->getType() ?>
                             </td>
                             <td><?= htmlspecialchars($item->getDescription()) ?></td>
-                            <td><?= $item->getValue() ?> pièces</td>
+                            <td><?= $item->getValeur() ?> pièces</td>
                             <td>
-                                <?php if ($item instanceof CombatItem): ?>
-                                    Dégâts: <?= $item->getDamage() ?><br>
-                                    Durabilité: <?= $item->getDurability() ?>
-                                <?php elseif ($item instanceof ConsumableItem): ?>
-                                    Soin: <?= $item->getHealAmount() ?><br>
-                                    <?= $item->isStackable() ? 'Empilable' : 'Non empilable' ?>
-                                <?php elseif ($item instanceof EquipmentItem): ?>
-                                    Défense: <?= $item->getDefense() ?><br>
-                                    Emplacement: <?= EQUIPMENT_SLOTS[$item->getSlot()] ?>
-                                <?php endif; ?>
+                                <?php 
+                                $effets = $item->getEffets();
+                                foreach ($effets as $nom => $valeur):
+                                    if (is_bool($valeur)):
+                                        echo htmlspecialchars($nom) . ': ' . ($valeur ? 'Oui' : 'Non') . '<br>';
+                                    else:
+                                        echo htmlspecialchars($nom) . ': ' . htmlspecialchars($valeur) . '<br>';
+                                    endif;
+                                endforeach;
+                                ?>
                             </td>
                             <td class="actions">
                                 <a href="/actions/item/delete.php?id=<?= $index ?>" 

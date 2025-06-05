@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Item;
+namespace App\Model\Item;
+
+use App\Interface\ItemInterface;
 
 class Item implements ItemInterface
 {

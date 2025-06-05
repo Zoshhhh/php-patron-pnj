@@ -1,13 +1,9 @@
 <?php
-require_once __DIR__ . '/../../../autoload.php';
-require_once __DIR__ . '/../../../src/Item/ItemFactory.php';
-require_once __DIR__ . '/../../../src/Item/ItemInterface.php';
-require_once __DIR__ . '/../../../src/Item/AbstractItem.php';
-require_once __DIR__ . '/../../../src/Item/CombatItem.php';
-require_once __DIR__ . '/../../../src/Item/ConsumableItem.php';
-require_once __DIR__ . '/../../../src/Item/EquipmentItem.php';
+require_once __DIR__ . '/../../../config.php';
+require_once ROOT_PATH . '/vendor/autoload.php';
 
-use App\Item\ItemFactory;
+use App\Factory\ItemFactory;
+use App\Model\Item\Item;
 
 session_start();
 
@@ -21,7 +17,6 @@ if (!isset($_SESSION['items'])) {
 }
 
 $factory = new ItemFactory();
-$item = null;
 
 try {
     $name = $_POST['name'] ?? '';
@@ -29,23 +24,37 @@ try {
     $value = (int)($_POST['value'] ?? 0);
     $type = $_POST['itemType'] ?? '';
 
+    $itemData = [
+        'nom' => $name,
+        'description' => $description,
+        'type' => $type,
+        'rarete' => 'Commun',
+        'poids' => 1.0,
+        'valeur' => $value,
+        'effets' => []
+    ];
+
+    // Ajout des effets spécifiques selon le type
     switch ($type) {
         case 'combat':
-            $damage = (int)($_POST['damage'] ?? 0);
-            $durability = (int)($_POST['durability'] ?? 0);
-            $item = $factory->createCombatItem($name, $description, $value, $damage, $durability);
+            $itemData['effets'] = [
+                'degats' => (int)($_POST['damage'] ?? 0),
+                'durabilite' => (int)($_POST['durability'] ?? 100)
+            ];
             break;
 
         case 'consommable':
-            $healAmount = (int)($_POST['healAmount'] ?? 0);
-            $isStackable = isset($_POST['isStackable']);
-            $item = $factory->createConsumableItem($name, $description, $value, $healAmount, $isStackable);
+            $itemData['effets'] = [
+                'soin' => (int)($_POST['healAmount'] ?? 0),
+                'empilable' => isset($_POST['isStackable'])
+            ];
             break;
 
         case 'equipement':
-            $defense = (int)($_POST['defense'] ?? 0);
-            $slot = $_POST['slot'] ?? '';
-            $item = $factory->createEquipmentItem($name, $description, $value, $defense, $slot);
+            $itemData['effets'] = [
+                'defense' => (int)($_POST['defense'] ?? 0),
+                'emplacement' => $_POST['slot'] ?? 'main'
+            ];
             break;
 
         default:
@@ -58,7 +67,10 @@ try {
         exit;
     }
 
+    $itemId = $factory->addCustomItem($itemData);
+    $item = new Item($factory->getItemDetails($itemId));
     $_SESSION['items'][] = $item;
+    
     $_SESSION['success'] = 'Item créé avec succès !';
     header('Location: /views/item/show.php');
     exit;

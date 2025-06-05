@@ -19,10 +19,16 @@ $factory = new ItemFactory();
 </head>
 <body>
     <div class="item-creator">
-        <nav class="creator-nav">
-            <a href="/views/personnage/index.php" class="nav-link">← Retour</a>
-            <h1>Créer un nouvel item</h1>
+        <nav class="back-nav">
+            <a href="/views/personnage/index.php" class="back-button">
+                <span class="icon">←</span>
+                <span>Retour</span>
+            </a>
         </nav>
+
+        <div class="creator-nav">
+            <h1>Créer un nouvel item</h1>
+        </div>
 
         <form id="itemForm" action="/actions/item/create.php" method="POST" class="item-form">
             <div class="form-section main-info">
@@ -41,14 +47,14 @@ $factory = new ItemFactory();
                     </div>
                 </div>
 
-                <div class="form-row" style="gap: 4rem;">
-                    <div class="form-group" style="width: 70%;">
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="name">Nom</label>
                         <input type="text" id="name" name="name" required 
                                placeholder="Ex: Épée longue, Potion..."
-                               class="form-input">
+                               class="form-input input-large">
                     </div>
-                    <div class="form-group" style="width: 100px;">
+                    <div class="form-group">
                         <label for="value">Valeur</label>
                         <div class="input-with-icon">
                             <input type="number" id="value" name="value" required min="0"

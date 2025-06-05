@@ -100,6 +100,55 @@ $factory = new ClasseFactory();
 $classe = $factory->createClasse('guerrier');
 ```
 
+4. **Système d'attaque :**
+Le système d'attaque fournit une API REST simple pour récupérer les données des personnages impliqués :
+
+```javascript
+// Exemple de requête d'attaque
+fetch('/actions/personnage/attack.php', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        attacker: "0", // ID du personnage attaquant
+        target: "1"    // ID du personnage cible
+    })
+})
+.then(response => response.json())
+.then(data => {
+    console.log('Attaquant:', data.attacker); // Données complètes du personnage attaquant
+    console.log('Cible:', data.target);       // Données complètes du personnage cible
+});
+```
+
+Réponse JSON :
+```json
+{
+    "success": true,
+    "attacker": {
+        "nom": "Aragorn",
+        "classe": "guerrier",
+        "categorie": "personnage",
+        "stats": {
+            "force": 15,
+            "dexterite": 14,
+            "pointsDeVie": 20
+        }
+    },
+    "target": {
+        "nom": "Gobelin",
+        "classe": "guerrier",
+        "categorie": "ennemi",
+        "stats": {
+            "force": 12,
+            "dexterite": 12,
+            "pointsDeVie": 15
+        }
+    }
+}
+```
+
 ## 🌟 Points forts de l'architecture
 
 1. **Extensibilité :**

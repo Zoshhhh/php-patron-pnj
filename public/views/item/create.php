@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../autoload.php';
 
-use App\Item\ItemFactory;
+use App\Factory\ItemFactory;
 
 session_start();
 

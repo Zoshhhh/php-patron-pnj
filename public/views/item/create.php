@@ -14,6 +14,9 @@ $factory = new ItemFactory();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title style="color: #000;">Créer un nouvel item</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/item-form.css">
 </head>
@@ -26,11 +29,11 @@ $factory = new ItemFactory();
             </a>
         </nav>
 
-        <div class="creator-nav">
-            <h1>Créer un nouvel item</h1>
-        </div>
-
         <form id="itemForm" action="/actions/item/create.php" method="POST" class="item-form">
+            <div class="creator-nav">
+                <h1>Créer un nouvel item</h1>
+            </div>
+
             <div class="form-section main-info">
                 <div class="form-group type-selector">
                     <label for="itemType">Type d'item</label>

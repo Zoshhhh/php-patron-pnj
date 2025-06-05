@@ -1,27 +1,50 @@
 <?php
 
-namespace App\Item;
+namespace App\Model\Item;
 
-class CombatItem extends AbstractItem
+class CombatItem extends Item
 {
-    private int $damage;
-    private int $durability;
+    private int $degats;
+    private int $durabilite;
 
-    public function __construct(string $name, string $description, int $value, int $damage, int $durability)
+    public function __construct(string $nom, string $description, int $valeur, int $degats, int $durabilite = 100)
     {
-        parent::__construct($name, $description, $value);
+        parent::__construct($nom, $description, $valeur);
         $this->type = 'combat';
-        $this->damage = $damage;
-        $this->durability = $durability;
+        $this->degats = $degats;
+        $this->durabilite = $durabilite;
     }
 
-    public function getDamage(): int
+    public function getDegats(): int
     {
-        return $this->damage;
+        return $this->degats;
     }
 
-    public function getDurability(): int
+    public function getDurabilite(): int
     {
-        return $this->durability;
+        return $this->durabilite;
+    }
+
+    public function setDurabilite(int $durabilite): void
+    {
+        $this->durabilite = max(0, min(100, $durabilite));
+    }
+
+    public function utiliser(): void
+    {
+        $this->durabilite = max(0, $this->durabilite - 5);
+    }
+
+    public function estUtilisable(): bool
+    {
+        return $this->durabilite > 0;
+    }
+
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'degats' => $this->degats,
+            'durabilite' => $this->durabilite
+        ]);
     }
 } 

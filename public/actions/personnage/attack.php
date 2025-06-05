@@ -23,8 +23,12 @@ if (!$attacker || !$target) {
     exit;
 }
 
+// Convertir les données en tableau avec l'inventaire
+$attackerData = is_array($attacker) ? $attacker : $attacker->toArray();
+$targetData = is_array($target) ? $target : $target->toArray();
+
 echo json_encode([
     'success' => true,
-    'attacker' => $attacker,
-    'target' => $target
+    'attacker' => $attackerData,
+    'target' => $targetData
 ]); 

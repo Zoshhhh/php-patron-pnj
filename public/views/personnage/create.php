@@ -16,16 +16,16 @@ $classes = $classeFactory->getAvailableClasses();
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fabrique = new PersonnageFactory();
-    
+
     $nom = $_POST['nom'] ?? '';
     $classe = $_POST['classe'] ?? 'guerrier';
     $categorie = $_POST['categorie'] ?? 'personnage';
-    
+
     if ($nom) {
-        $stats = [];    
+        $stats = [];
         foreach (['force', 'dexterite', 'constitution', 'intelligence', 'sagesse', 'charisme', 'pointsDeVie', 'classeArmure', 'vitesse'] as $stat) {
             if (isset($_POST[$stat])) {
-                $stats[$stat] = (int)$_POST[$stat];
+                $stats[$stat] = (int) $_POST[$stat];
             }
         }
 
@@ -62,18 +62,20 @@ foreach ($classes as $classe) {
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Créer un Personnage</title>
     <link rel="stylesheet" href="../../css/style.css">
 </head>
+
 <body>
     <div class="character-sheet creation-form">
         <div class="character-header">
             <h1>Créer un Personnage</h1>
         </div>
-        
+
         <?php if ($message): ?>
             <div class="alert"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
@@ -111,6 +113,7 @@ foreach ($classes as $classe) {
                 <div class="form-group">
                     <label for="force">Force</label>
                     <input type="number" id="force" name="force" min="1" max="20" value="16">
+                    <button type="button" onclick="apiRollDice(20, 1)">Lancer</button>
                 </div>
 
                 <div class="form-group">
@@ -164,24 +167,39 @@ foreach ($classes as $classe) {
     </div>
 
     <script>
-    const statsDefaut = <?= json_encode($statsDefaut) ?>;
+        const statsDefaut = <?= json_encode($statsDefaut) ?>;
 
-    function updateDefaultStats() {
-        const classe = document.getElementById('classe').value;
-        const stats = statsDefaut[classe];
-        
-        if (stats) {
-            for (const [stat, value] of Object.entries(stats)) {
-                const input = document.getElementById(stat);
-                if (input) {
-                    input.value = value;
+        function updateDefaultStats() {
+            const classe = document.getElementById('classe').value;
+            const stats = statsDefaut[classe];
+
+            if (stats) {
+                for (const [stat, value] of Object.entries(stats)) {
+                    const input = document.getElementById(stat);
+                    if (input) {
+                        input.value = value;
+                    }
                 }
             }
         }
-    }
 
-    // Mettre à jour les stats au chargement de la page
-    document.addEventListener('DOMContentLoaded', updateDefaultStats);
+        function apiRollDice(typeOfDice, diceQuantity) {
+            fetch('../../../../src/Service/api.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+                body: `action=roll&dice=${typeOfDice}&count=${diceQuantity}`
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data);
+                    }
+                });
+        }
+
+        // Mettre à jour les stats au chargement de la page
+        document.addEventListener('DOMContentLoaded', updateDefaultStats);
     </script>
 </body>
-</html> 
+
+</html>

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Fabrique;
+namespace App\Factory;
 
-use App\Personnage\Archer;
-use App\Personnage\Guerrier;
-use App\Personnage\PersonnageInterface;
-use App\Strategie\CombatADistance;
-use App\Strategie\CombatAuCorpsACorps;
+use App\Model\Personnage\Archer;
+use App\Model\Personnage\Guerrier;
+use App\Interface\PersonnageInterface;
+use App\Model\Strategie\CombatADistance;
+use App\Model\Strategie\CombatAuCorpsACorps;
 
-class FabriquePersonnage
+class PersonnageFactory
 {
     public function creerPersonnage(string $type, array $data): PersonnageInterface
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Personnage;
+namespace App\Interface;
 
 interface PersonnageInterface
 {

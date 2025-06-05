@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Strategie;
+namespace App\Interface;
 
 use App\Personnage\PersonnageInterface;
 

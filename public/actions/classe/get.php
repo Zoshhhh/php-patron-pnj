@@ -1,5 +1,10 @@
 <?php
 session_start();
+require_once __DIR__ . '/../../../config.php';
+require_once ROOT_PATH . '/vendor/autoload.php';
+
+use App\Factory\ClasseFactory;
+
 header('Content-Type: application/json');
 
 if (!isset($_GET['id'])) {
@@ -9,14 +14,8 @@ if (!isset($_GET['id'])) {
 }
 
 $classeId = $_GET['id'];
-$classe = null;
-
-foreach ($_SESSION['classes'] as $c) {
-    if ($c['id'] === $classeId) {
-        $classe = $c;
-        break;
-    }
-}
+$classeFactory = new ClasseFactory();
+$classe = $classeFactory->getClassDetails($classeId);
 
 if ($classe === null) {
     http_response_code(404);

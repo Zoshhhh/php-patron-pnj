@@ -3,20 +3,13 @@ session_start();
 require_once __DIR__ . '/../../../config.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
-use App\Classes\ClasseFactory;
+use App\Factory\ClasseFactory;
+
+unset($_SESSION['classes']);
 
 if (!isset($_SESSION['classes'])) {
     $classeFactory = new ClasseFactory();
-    $_SESSION['classes'] = array_map(function($classe) {
-        return [
-            'id' => array_search($classe, (new ClasseFactory())->getAvailableClasses()),
-            'nom' => $classe['nom'],
-            'description' => $classe['description'],
-            'stats_base' => $classe['stats_base'],
-            'competences' => $classe['competences'],
-            'equipement_initial' => $classe['equipement_initial']
-        ];
-    }, $classeFactory->getAvailableClasses());
+    $_SESSION['classes'] = $classeFactory->getAvailableClasses();
 }
 
 $selectedClass = null;

@@ -57,13 +57,9 @@ class ClasseFactory {
     }
 
     public function getAvailableClasses(): array {
-        return array_map(function($class) {
-            return [
-                'id' => array_search($class, $this->classes),
-                'nom' => $class['nom'],
-                'description' => $class['description']
-            ];
-        }, $this->classes);
+        return array_map(function($class, $id) {
+            return array_merge($class, ['id' => $id]);
+        }, $this->classes, array_keys($this->classes));
     }
 
     public function getClassDetails(string $classeId): ?array {

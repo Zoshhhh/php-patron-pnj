@@ -6,8 +6,8 @@ Ce projet est un gestionnaire de PNJ (Personnages Non Joueurs) utilisant plusieu
 
 ```
 src/
-├── Factory/          # Patrons Fabrication
-├── Interface/        # Contrats
+├── Factory/         # Patrons Fabrication
+├── Interface/       # Contrats
 └── Model/           # Classes métier
     ├── Item/
     ├── Personnage/
@@ -121,12 +121,12 @@ $classe = $factory->createClasse('guerrier');
 
 ```
 .
-├── public/                  # Interface utilisateur
-│   ├── actions/            # Points d'entrée des actions
+├── public/                # Interface utilisateur
+│   ├── actions/           # Points d'entrée des actions
 │   ├── css/               # Styles
 │   └── views/             # Templates PHP
 │
-└── src/                    # Code source
+└── src/                   # Code source
     ├── Factory/           # Création d'objets
     ├── Interface/         # Contrats
     └── Model/             # Classes métier

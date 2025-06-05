@@ -10,6 +10,21 @@ use App\Strategie\CombatAuCorpsACorps;
 
 class FabriquePersonnage
 {
+    public function creerPersonnage(string $type, array $data): PersonnageInterface
+    {
+        $nom = $data['nom'];
+        $stats = $data['stats'] ?? [];
+        $categorie = $data['categorie'] ?? 'personnage';
+
+        switch ($type) {
+            case 'archer':
+                return $this->creerArcher($nom, $stats);
+            case 'guerrier':
+            default:
+                return $this->creerGuerrier($nom, $stats);
+        }
+    }
+
     public function creerGuerrier(string $nom, array $stats = []): PersonnageInterface
     {
         return new Guerrier($nom, new CombatAuCorpsACorps(), $stats);

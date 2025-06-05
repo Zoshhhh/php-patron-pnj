@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../../config.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
 if (!isset($_SESSION['personnages'])) {
@@ -25,14 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        $_SESSION['personnages'][] = [
+        $personnage = $fabrique->creerPersonnage($classe, [
             'nom' => $nom,
-            'classe' => $classe,
             'categorie' => $categorie,
             'stats' => $stats
-        ];
+        ]);
 
-        header('Location: ./index.php');
+        $_SESSION['personnages'][] = $personnage;
+        header('Location: index.php');
         exit;
     } else {
         $message = 'Le nom est requis';

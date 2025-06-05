@@ -95,7 +95,8 @@ foreach ($classes as $classe) {
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nom">Nom du personnage</label>
-                        <input type="text" id="nom" name="nom" required placeholder="Entrez le nom du personnage" class="input-large">
+                        <input type="text" id="nom" name="nom" required placeholder="Entrez le nom du personnage"
+                            class="input-large">
                     </div>
                 </div>
 
@@ -125,7 +126,16 @@ foreach ($classes as $classe) {
 
             <div class="form-section">
                 <h3>Caractéristiques</h3>
+                <div class="form-group">
+                    <button type="button" class="button secondary" onclick="apiRollDiceAsync('d20', 6, (data) => {
+                            updateUi(['force', 'dexterite', 'constitution', 'intelligence', 'sagesse', 'charisme'], data.results);
+                        })">
+                        <span class="button-icon">🎲</span>
+                        Lancer un dé pour toutes les stats
+                    </button>
+                </div>
                 <div class="stats-grid">
+
                     <div class="form-group">
                         <label for="force">Force</label>
                         <input type="number" id="force" name="force" min="1" max="20" value="16">
@@ -205,18 +215,35 @@ foreach ($classes as $classe) {
             }
         }
 
-        function apiRollDice(typeOfDice, diceQuantity) {
-            fetch('../../../../src/Service/api.php', {
+
+        function apiRollDiceAsync(diceType, diceQuantity, callback) {
+            fetch('api.php?action=roll', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
-                body: `action=roll&dice=${typeOfDice}&count=${diceQuantity}`
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: `action=roll&dice=${diceType}&count=${diceQuantity}`
             })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        console.log(data);
+                        callback(data);
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    callback(0);
                 });
+        }
+
+        function updateUi(stats, results) {
+            stats.forEach((stat, index) => {
+                const input = document.getElementById(stat);
+                if (input) {
+                    input.value = results[index] || 0;
+                }
+            });
         }
 
         // Mettre à jour les stats au chargement de la page

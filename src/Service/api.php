@@ -5,92 +5,319 @@ header('Content-Type: application/json; charset=utf-8');
 
 $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
-class SimpleDice
-{
-    private $sides;
+// Interface pour tous les types de dés
+interface DiceInterface {
+    public function roll();
+    public function rollMultiple($count);
+    public function getSides();
+    public function getName();
+}
 
-    public function __construct($sides)
-    {
+// Interface pour tous les types de dés
+interface DiceFabrique {
+    public function fabrique() : DiceInterface;
+}
+
+// Classe de base abstraite pour les dés
+abstract class BaseDice implements DiceInterface {
+    protected $sides;
+    protected $name;
+    
+    public function __construct($sides, $name) {
         $this->sides = $sides;
+        $this->name = $name;
     }
-
-    public function roll()
-    {
+    
+    public function roll() {
         return rand(1, $this->sides);
     }
-
-    public function rollMultiple($count)
-    {
+    
+    public function rollMultiple($count) {
         $results = [];
         for ($i = 0; $i < $count; $i++) {
             $results[] = $this->roll();
         }
         return $results;
     }
+    
+    public function getSides() {
+        return $this->sides;
+    }
+    
+    public function getName() {
+        return $this->name;
+    }
 }
 
-class DataManager
-{
-    private $file = 'simple_dice_data.json';
+// Classes spécifiques pour chaque type de dé
+class D4 extends BaseDice {
+    public function __construct() {
+        parent::__construct(4, 'd4');
+    }
+}
 
-    public function saveResult($dice, $result, $results = null, $count = 1)
-    {
+class D6 extends BaseDice {     
+    public function __construct() {
+        parent::__construct(6, 'd6');
+    }
+}
+
+class D8 extends BaseDice {
+    public function __construct() {
+        parent::__construct(8, 'd8');
+    }
+}
+
+class D10 extends BaseDice {
+    public function __construct() {
+        parent::__construct(10, 'd10');
+    }
+}
+
+class D12 extends BaseDice {
+    public function __construct() {
+        parent::__construct(12, 'd12');
+    }
+}
+
+class D20 extends BaseDice {
+    public function __construct() {
+        parent::__construct(20, 'd20');
+    }
+    
+    // Méthode spéciale pour les critiques au D20
+    public function isCriticalHit($result) {
+        return $result === 20;
+    }
+    
+    public function isCriticalFail($result) {
+        return $result === 1;
+    }
+}
+
+class D100 extends BaseDice {
+    public function __construct() {
+        parent::__construct(100, 'd100');
+    }
+}
+
+// Classe pour gérer la fabrique de dés
+class D4Factory implements DiceFabrique {
+    public function fabrique() : DiceInterface {
+        return new D4();
+    }
+}
+
+class D6Factory implements DiceFabrique {
+    public function fabrique() : DiceInterface {
+        return new D6();
+    }
+}
+
+class D8Factory implements DiceFabrique {
+    public function fabrique() : DiceInterface {
+        return new D8();
+    }
+}
+
+class D10Factory implements DiceFabrique {
+    public function fabrique() : DiceInterface {
+        return new D10();
+    }
+}
+
+class D12Factory implements DiceFabrique {
+    public function fabrique() : DiceInterface {
+        return new D12();
+    }
+}
+
+class D20Factory implements DiceFabrique {
+    public function fabrique() : DiceInterface {
+        return new D20();
+    }
+}
+
+class D100Factory implements DiceFabrique {
+    public function fabrique() : DiceInterface {
+        return new D100();
+    }
+}
+
+// Fabrique pour créer les dés
+// class DiceFactory {
+//     private static $diceTypes = [
+//         'd4' => D4::class,
+//         'd6' => D6::class,
+//         'd8' => D8::class,
+//         'd10' => D10::class,
+//         'd12' => D12::class,
+//         'd20' => D20::class,
+//         'd100' => D100::class
+//     ];
+    
+//     public static function createDice($diceType) {
+//         // Validation du type de dé
+//         // if (!isset(self::$diceTypes[$diceType])) {
+//         //     throw new InvalidArgumentException("Type de dé invalide: $diceType");
+//         // }
+        
+//         // $className = self::$diceTypes[$diceType];
+        
+//         return new $className();
+//     }
+    
+//     public static function getAvailableDiceTypes() {
+//         return array_keys(self::$diceTypes);
+//     }
+    
+//     public static function isValidDiceType($diceType) {
+//         return isset(self::$diceTypes[$diceType]);
+//     }
+// }
+
+
+
+// Classe pour gérer les résultats de lancers
+class DiceRollResult {
+    private $dice;
+    private $count;
+    private $results;
+    private $total;
+    
+    public function __construct(DiceInterface $dice, $count, array $results) {
+        $this->dice = $dice;
+        $this->count = $count;
+        $this->results = $results;
+        $this->total = array_sum($results);
+    }
+    
+    public function toArray() {
         $data = [
-            'dice' => $dice,
-            'result' => $result,
-            'count' => $count
+            'dice' => $this->dice->getName(),
+            'count' => $this->count,
+            'total' => $this->total
         ];
-
-        // Si c'est un lancer multiple
-        if ($results !== null && is_array($results)) {
-            $data['results'] = $results;
-            $data['total'] = $result; // $result contient déjà le total
+        
+        if ($this->count === 1) {
+            $data['result'] = $this->results[0];
+        } else {
+            $data['results'] = $this->results;
         }
+        
+        // Ajout d'informations spéciales pour le D20
+        if ($this->dice instanceof D20 && $this->count === 1) {
+            $result = $this->results[0];
+            $data['is_critical_hit'] = $this->dice->isCriticalHit($result);
+            $data['is_critical_fail'] = $this->dice->isCriticalFail($result);
+        }
+        
+        return $data;
+    }
+    
+    public function getTotal() {
+        return $this->total;
+    }
+    
+    public function getResults() {
+        return $this->results;
+    }
+    
+    public function getDice() {
+        return $this->dice;
+    }
+    
+    public function getCount() {
+        return $this->count;
+    }
+}
 
+// Service pour gérer les lancers de dés
+class DiceRollService {
+    public static function rollDice($diceType, $count = 1) {
+        // Validation du nombre de dés
+        $count = max(1, min(20, (int)$count));
+        
+        try {
+            // Création du dé via la fabrique
+            switch ($diceType){
+                case 'd4':
+                    $dice = (new D4Factory())->fabrique();
+                    break;
+                case 'd6':
+                    $dice = (new D6Factory())->fabrique();
+                    break;
+                case 'd8':
+                    $dice = (new D8Factory())->fabrique();
+                    break;
+                case 'd10':
+                    $dice = (new D10Factory())->fabrique();
+                    break;
+                case 'd12': 
+                    $dice = (new D12Factory())->fabrique();
+                    break;
+                case 'd20': 
+                    $dice = (new D20Factory())->fabrique();
+                    break;
+                case 'd100': 
+                    $dice = (new D100Factory())->fabrique();
+                    break;
+                break;
+            }
+            // Lancer des dés
+            $results = $dice->rollMultiple($count);
+            
+            // Création du résultat
+            return new DiceRollResult($dice, $count, $results);
+            
+        } catch (InvalidArgumentException $e) {
+            throw new Exception("Erreur lors du lancer: " . $e->getMessage());
+        }
+    }
+}
+
+// Gestionnaire de données (inchangé)
+class DataManager {
+    private $file = 'simple_dice_data.json';
+    
+    public function saveRollResult(DiceRollResult $rollResult) {
+        $data = $rollResult->toArray();
         return file_put_contents($this->file, json_encode($data)) !== false;
     }
-
-    public function getResult()
-    {
+    
+    public function getResult() {
         return file_exists($this->file) ? json_decode(file_get_contents($this->file), true) : null;
     }
 }
 
+// === TRAITEMENT DES REQUÊTES ===
+
 $manager = new DataManager();
 
 if (($_POST['action'] ?? '') === 'roll') {
-    $diceType = $_POST['dice'] ?? 'd20';
-    $diceCount = max(1, min(20, (int) ($_POST['count'] ?? 1))); // Entre 1 et 20 dés
-
-    $sides = (int) str_replace('d', '', $diceType);
-    $dice = new SimpleDice($sides);
-
-    if ($diceCount === 1) {
-        // Lancer simple
-        $result = $dice->roll();
-        $saved = $manager->saveResult($diceType, $result, null, 1);
-
+    try {
+        $diceType = $_POST['dice'] ?? 'd20';
+        $diceCount = $_POST['count'] ?? 1;
+        
+        // Utilisation du service pour lancer les dés
+        $rollResult = DiceRollService::rollDice($diceType, $diceCount);
+        
+        // Sauvegarde du résultat   
+        $saved = $manager->saveRollResult($rollResult);
+        
+        // Réponse JSON
+        $response = $rollResult->toArray();
+        $response['success'] = $saved;
+        
+        echo json_encode($response);
+        
+    } catch (Exception $e) {
         echo json_encode([
-            'success' => $saved,
-            'result' => $result,
-            'dice' => $diceType,
-            'count' => 1
-        ]);
-    } else {
-        // Lancers multiples
-        $results = $dice->rollMultiple($diceCount);
-        $total = array_sum($results);
-        $saved = $manager->saveResult($diceType, $total, $results, $diceCount);
-
-        echo json_encode([
-            'success' => $saved,
-            'total' => $total,
-            'results' => $results,
-            'dice' => $diceType,
-            'count' => $diceCount
+            'success' => false,
+            'error' => $e->getMessage()
         ]);
     }
-
+    
     exit;
 }
 
@@ -99,4 +326,11 @@ if (($_GET['action'] ?? '') === 'get') {
     echo json_encode($manager->getResult() ?? []);
     exit;
 }
-?>
+
+// Endpoint pour obtenir les types de dés disponibles
+if (($_GET['action'] ?? '') === 'dice_types') {
+    echo json_encode([
+        'dice_types' => DiceFactory::getAvailableDiceTypes()
+    ]);
+    exit;
+}

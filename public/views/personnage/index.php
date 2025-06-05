@@ -52,13 +52,29 @@ function peutAttaquer($attaquant, $cible) {
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: #F5E6D3;
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
-            max-width: 600px;
+            max-width: 800px;
             border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+            font-size: 1.5em;
         }
 
         .close {
@@ -75,28 +91,83 @@ function peutAttaquer($attaquant, $cible) {
 
         .target-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 10px;
         }
 
         .target-card {
-            padding: 1rem;
+            padding: 1.5rem;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+            background-color: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
-        .target-card:hover {
-            background-color: #f5f5f5;
+        .target-card:not(.disabled):hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
         }
 
         .target-card.disabled {
-            opacity: 0.5;
+            opacity: 0.6;
             cursor: not-allowed;
+            background-color: #f5f5f5;
         }
+
+        .target-card h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.2em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .target-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .target-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .target-stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .target-stat-value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .target-category {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .target-category.personnage { background-color: #e3f2fd; color: #1565c0; }
+        .target-category.allie { background-color: #e8f5e9; color: #2e7d32; }
+        .target-category.ennemi { background-color: #ffebee; color: #c62828; }
+        .target-category.pnj { background-color: #fff3e0; color: #ef6c00; }
     </style>
 </head>
 <body>
@@ -172,15 +243,35 @@ function peutAttaquer($attaquant, $cible) {
         <!-- Modal pour l'attaque -->
         <div id="attackModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Choisir une cible</h2>
+                <div class="modal-header">
+                    <h2>Choisir une cible</h2>
+                    <span class="close">&times;</span>
+                </div>
                 <div class="target-list">
                     <?php foreach ($_SESSION['personnages'] as $index => $cible): ?>
                         <div class="target-card" data-target-id="<?= $index ?>" data-category="<?= htmlspecialchars($cible['categorie'] ?? 'personnage') ?>">
+                            <span class="target-category <?= htmlspecialchars($cible['categorie'] ?? 'personnage') ?>">
+                                <?= ucfirst($cible['categorie'] ?? 'personnage') ?>
+                            </span>
                             <h3><?= htmlspecialchars($cible['nom']) ?></h3>
-                            <p>Classe: <?= ucfirst($cible['classe']) ?></p>
-                            <p>Catégorie: <?= ucfirst($cible['categorie'] ?? 'personnage') ?></p>
-                            <p>PV: <?= $cible['stats']['pointsDeVie'] ?? 10 ?></p>
+                            <div class="target-info">
+                                <div class="target-stat">
+                                    <span class="target-stat-label">Classe:</span>
+                                    <span class="target-stat-value"><?= ucfirst($cible['classe']) ?></span>
+                                </div>
+                                <div class="target-stat">
+                                    <span class="target-stat-label">PV:</span>
+                                    <span class="target-stat-value"><?= $cible['stats']['pointsDeVie'] ?? 10 ?></span>
+                                </div>
+                                <div class="target-stat">
+                                    <span class="target-stat-label">FOR:</span>
+                                    <span class="target-stat-value"><?= $cible['stats']['force'] ?? 10 ?></span>
+                                </div>
+                                <div class="target-stat">
+                                    <span class="target-stat-label">DEX:</span>
+                                    <span class="target-stat-value"><?= $cible['stats']['dexterite'] ?? 10 ?></span>
+                                </div>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>

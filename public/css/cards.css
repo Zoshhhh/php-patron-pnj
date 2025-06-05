@@ -34,7 +34,8 @@
     color: var(--text-dark);
     margin-bottom: 16px;
     font-size: 1.1em;
-    font-family: 'Crimson Text', serif;
+    font-family: var(--font-main);
+    letter-spacing: 0.5px;
 }
 
 .character-stats {
@@ -54,20 +55,21 @@
     background: white;
     border-radius: calc(var(--border-radius) - 2px);
     border: 1px solid var(--accent-color);
-    font-weight: 600;
+    font-family: var(--font-main);
+    font-size: 1.4em;
     color: var(--text-dark);
-    font-size: 1.1em;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .stat span {
     display: block;
-    font-size: 0.9em;
+    font-size: 0.7em;
     color: var(--text-dark);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 6px;
-    font-family: 'Cinzel', serif;
+    font-family: var(--font-accent);
 }
 
 .character-actions {

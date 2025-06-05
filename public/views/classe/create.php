@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/creation-form.css">
 </head>
+
 <body>
     <div class="creation-form">
         <nav class="back-nav">
@@ -74,18 +76,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h3>Informations de base</h3>
                 <div class="form-group">
                     <label for="nom">Nom de la classe</label>
-                    <input type="text" id="nom" name="nom" required placeholder="Entrez le nom de la classe" class="input-large">
+                    <input type="text" id="nom" name="nom" required placeholder="Entrez le nom de la classe"
+                        class="input-large">
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="3" required 
-                              placeholder="Décrivez les caractéristiques et spécificités de la classe..."></textarea>
+                    <textarea id="description" name="description" rows="3" required
+                        placeholder="Décrivez les caractéristiques et spécificités de la classe..."></textarea>
                 </div>
             </div>
 
             <div class="form-section">
                 <h3>Statistiques de base</h3>
+
+                <div class="form-group">
+                    <button type="button" class="button secondary" onclick="apiRollDiceAsync('d20', 6, (data) => {
+                            updateUi(['force', 'dexterite', 'constitution', 'intelligence', 'sagesse', 'charisme'], data.results);
+                        })">
+                        <span class="button-icon">🎲</span>
+                        Lancer un dé pour toutes les stats
+                    </button>
+                </div>
+
                 <div class="stats-grid">
                     <div class="form-group">
                         <label for="force">Force</label>
@@ -153,41 +166,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-    function addCompetence() {
-        const container = document.getElementById('competences-container');
-        const div = document.createElement('div');
-        div.className = 'competence-entry';
-        div.innerHTML = `
+        function addCompetence() {
+            const container = document.getElementById('competences-container');
+            const div = document.createElement('div');
+            div.className = 'competence-entry';
+            div.innerHTML = `
             <input type="text" name="competences[]" placeholder="Nom de la compétence" required>
             <button type="button" class="remove-competence" onclick="removeCompetence(this)">×</button>
         `;
-        container.appendChild(div);
-    }
-
-    function removeCompetence(button) {
-        const container = document.getElementById('competences-container');
-        if (container.children.length > 1) {
-            button.parentElement.remove();
+            container.appendChild(div);
         }
-    }
 
-    function addEquipement() {
-        const container = document.getElementById('equipement-container');
-        const div = document.createElement('div');
-        div.className = 'equipement-entry';
-        div.innerHTML = `
+        function removeCompetence(button) {
+            const container = document.getElementById('competences-container');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        function addEquipement() {
+            const container = document.getElementById('equipement-container');
+            const div = document.createElement('div');
+            div.className = 'equipement-entry';
+            div.innerHTML = `
             <input type="text" name="equipement[]" placeholder="Pièce d'équipement" required>
             <button type="button" class="remove-equipement" onclick="removeEquipement(this)">×</button>
         `;
-        container.appendChild(div);
-    }
-
-    function removeEquipement(button) {
-        const container = document.getElementById('equipement-container');
-        if (container.children.length > 1) {
-            button.parentElement.remove();
+            container.appendChild(div);
         }
-    }
+
+        function removeEquipement(button) {
+            const container = document.getElementById('equipement-container');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        function apiRollDiceAsync(diceType, diceQuantity, callback) {
+            fetch('api.php?action=roll', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: `action=roll&dice=${diceType}&count=${diceQuantity}`
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        callback(data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    callback(0);
+                });
+        }
+
+        function updateUi(stats, results) {
+            stats.forEach((stat, index) => {
+                const input = document.getElementById(stat);
+                if (input) {
+                    input.value = results[index] || 0;
+                }
+            });
+        }
     </script>
 </body>
-</html> 
+
+</html>

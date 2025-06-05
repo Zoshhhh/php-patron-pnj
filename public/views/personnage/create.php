@@ -3,15 +3,19 @@ session_start();
 require_once __DIR__ . '/../../../config.php';
 require_once ROOT_PATH . '/vendor/autoload.php';
 
+use App\Factory\PersonnageFactory;
+use App\Factory\ClasseFactory;
+
 if (!isset($_SESSION['personnages'])) {
     $_SESSION['personnages'] = [];
 }
 
-use App\Fabrique\FabriquePersonnage;
+$classeFactory = new ClasseFactory();
+$classes = $classeFactory->getAvailableClasses();
 
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $fabrique = new FabriquePersonnage();
+    $fabrique = new PersonnageFactory();
     
     $nom = $_POST['nom'] ?? '';
     $classe = $_POST['classe'] ?? 'guerrier';
@@ -39,18 +43,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$statsDefaut = [
-    'guerrier' => [
-        'force' => 16, 'dexterite' => 14, 'constitution' => 12,
-        'intelligence' => 14, 'sagesse' => 14, 'charisme' => 12,
-        'pointsDeVie' => 20, 'classeArmure' => 13, 'vitesse' => 30
-    ],
-    'archer' => [
-        'force' => 12, 'dexterite' => 16, 'constitution' => 12,
-        'intelligence' => 14, 'sagesse' => 14, 'charisme' => 12,
-        'pointsDeVie' => 15, 'classeArmure' => 14, 'vitesse' => 35
-    ]
-];
+// Récupérer les stats par défaut depuis la ClasseFactory
+$statsDefaut = [];
+foreach ($classes as $classe) {
+    $details = $classeFactory->getClassDetails($classe['id']);
+    if ($details) {
+        $statsDefaut[$classe['id']] = array_merge(
+            $details['stats_base'],
+            [
+                'pointsDeVie' => 20,
+                'classeArmure' => 13,
+                'vitesse' => 30
+            ]
+        );
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -81,8 +88,11 @@ $statsDefaut = [
                 <div class="form-group">
                     <label for="classe">Classe</label>
                     <select id="classe" name="classe" onchange="updateDefaultStats()">
-                        <option value="guerrier">Guerrier</option>
-                        <option value="archer">Archer</option>
+                        <?php foreach ($classes as $classe): ?>
+                            <option value="<?= htmlspecialchars($classe['id']) ?>">
+                                <?= htmlspecialchars($classe['nom']) ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -160,13 +170,18 @@ $statsDefaut = [
         const classe = document.getElementById('classe').value;
         const stats = statsDefaut[classe];
         
-        for (const [stat, value] of Object.entries(stats)) {
-            const input = document.getElementById(stat);
-            if (input) {
-                input.value = value;
+        if (stats) {
+            for (const [stat, value] of Object.entries(stats)) {
+                const input = document.getElementById(stat);
+                if (input) {
+                    input.value = value;
+                }
             }
         }
     }
+
+    // Mettre à jour les stats au chargement de la page
+    document.addEventListener('DOMContentLoaded', updateDefaultStats);
     </script>
 </body>
 </html> 

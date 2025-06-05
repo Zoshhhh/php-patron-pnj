@@ -1,5 +1,5 @@
 .creation-form {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 2rem auto;
     background: linear-gradient(135deg, var(--secondary-color), #e4d5c3);
     border-radius: var(--border-radius);
@@ -22,11 +22,14 @@
 
 .creation-form h1 {
     color: var(--text-dark);
-    font-size: 2rem;
-    margin: 0 0 2rem;
-    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    margin: 0 0 3rem;
+    font-family: 'MedievalSharp', cursive;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-align: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--accent-color);
 }
 
 .form-section {
@@ -80,7 +83,8 @@
     border-radius: var(--border-radius);
     background: var(--background-light);
     color: var(--text-dark);
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-family: var(--font-main);
     transition: var(--transition);
 }
 
@@ -99,6 +103,16 @@
     box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
 }
 
+.form-group select {
+    cursor: pointer;
+    padding-right: 30px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b4513' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1em;
+}
+
 .form-group textarea {
     width: 100%;
     max-width: 600px;
@@ -109,8 +123,10 @@
     border-radius: var(--border-radius);
     background: var(--background-light);
     color: var(--text-dark);
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-family: var(--font-main);
     transition: var(--transition);
+    line-height: 1.5;
 }
 
 .stats-grid {
@@ -140,6 +156,9 @@
     display: block;
     -moz-appearance: textfield;
     min-width: unset;
+    font-family: var(--font-main);
+    font-size: 1.3rem;
+    font-weight: bold;
 }
 
 .stats-grid .form-group input[type="number"]::-webkit-outer-spin-button,
@@ -156,6 +175,7 @@
     align-items: center;
     width: 100%;
     max-width: 600px;
+    position: relative;
 }
 
 .competence-entry input,
@@ -163,6 +183,32 @@
     flex: 1;
     min-width: unset;
     width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid var(--accent-color);
+    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, var(--background-light), #fff);
+    color: var(--text-dark);
+    font-family: var(--font-main);
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.competence-entry input:focus,
+.equipement-entry input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    background: #fff;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.competence-entry input::placeholder,
+.equipement-entry input::placeholder {
+    color: rgba(44, 24, 16, 0.5);
+    font-style: italic;
+    font-family: var(--font-main);
 }
 
 .remove-competence,
@@ -179,13 +225,44 @@
     cursor: pointer;
     border: none;
     padding: 0;
-    transition: var(--transition);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    min-width: unset;
+    flex-shrink: 0;
 }
 
 .remove-competence:hover,
 .remove-equipement:hover {
     background: #a33;
     transform: scale(1.1);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Style pour le bouton d'ajout */
+.button-icon {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.form-section .button {
+    margin-top: 1rem;
+    background: var(--accent-color);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    color: var(--text-light);
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.form-section .button:hover {
+    background: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .form-actions {

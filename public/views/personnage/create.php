@@ -263,7 +263,6 @@ foreach ($classes as $classe) {
             });
         }
 
-        // Mettre à jour les stats au chargement de la page
         document.addEventListener('DOMContentLoaded', updateDefaultStats);
     </script>
 </body>

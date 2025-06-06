@@ -1,5 +1,6 @@
 <?php
 // api.php
+// api.php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 header('Content-Type: application/json; charset=utf-8');
@@ -190,13 +191,29 @@ class DiceRollResult
     private $count;
     private $results;
     private $total;
+    private $modifier;
+    private $showBestWorst;
+    private $advantageMode;
+    
+    public function __construct(DiceInterface $dice, $count, array $results, $modifier = 0, $showBestWorst = false, $advantageMode = false) {
 
     public function __construct(DiceInterface $dice, $count, array $results)
     {
         $this->dice = $dice;
         $this->count = $count;
         $this->results = $results;
-        $this->total = array_sum($results);
+        $this->modifier = $modifier;
+        $this->showBestWorst = $showBestWorst;
+        $this->advantageMode = $advantageMode;
+        
+        // Calcul du total selon le mode
+        if ($advantageMode && $dice->getName() === 'd20' && count($results) === 2) {
+            // Mode avantage : prendre le meilleur dé
+            $this->total = max($results);
+        } else {
+            // Mode normal : somme de tous les dés
+            $this->total = array_sum($results);
+        }
     }
 
     public function toArray()
@@ -204,7 +221,10 @@ class DiceRollResult
         $data = [
             'dice' => $this->dice->getName(),
             'count' => $this->count,
-            'total' => $this->total
+            'total' => $this->total,
+            'modifier' => $this->modifier,
+            'show_best_worst' => $this->showBestWorst,
+            'advantage_mode' => $this->advantageMode
         ];
 
         if ($this->count === 1) {
@@ -214,10 +234,22 @@ class DiceRollResult
         }
 
         // Ajout d'informations spéciales pour le D20
-        if ($this->dice instanceof D20 && $this->count === 1) {
-            $result = $this->results[0];
-            $data['is_critical_hit'] = $this->dice->isCriticalHit($result);
-            $data['is_critical_fail'] = $this->dice->isCriticalFail($result);
+        if ($this->dice instanceof D20) {
+            // Pour le mode avantage, utiliser le meilleur résultat
+            $effectiveResult = ($this->advantageMode && count($this->results) === 2) 
+                ? max($this->results) 
+                : $this->results[0];
+                
+            if ($this->count === 1 || ($this->advantageMode && count($this->results) === 2)) {
+                $data['is_critical_hit'] = $this->dice->isCriticalHit($effectiveResult);
+                $data['is_critical_fail'] = $this->dice->isCriticalFail($effectiveResult);
+            }
+        }
+        
+        // Ajouter les informations pour l'historique
+        if ($this->showBestWorst && count($this->results) > 1) {
+            $data['best_result'] = max($this->results);
+            $data['worst_result'] = min($this->results);
         }
 
         return $data;
@@ -241,6 +273,10 @@ class DiceRollResult
     public function getCount()
     {
         return $this->count;
+    }
+    
+    public function getModifier() {
+        return $this->modifier;
     }
 }
 
@@ -270,14 +306,19 @@ class DiceRollService
                     $dice = (new D10Factory())->fabrique();
                     break;
                 case 'd12':
+                case 'd12':
                     $dice = (new D12Factory())->fabrique();
                     break;
+                case 'd20':
                 case 'd20':
                     $dice = (new D20Factory())->fabrique();
                     break;
                 case 'd100':
+                case 'd100':
                     $dice = (new D100Factory())->fabrique();
                     break;
+                default:
+                    throw new InvalidArgumentException("Type de dé non supporté: " . $diceType);
                 default:
                     throw new InvalidArgumentException("Type de dé non supporté: " . $diceType);
             }
@@ -409,4 +450,5 @@ if (($_POST['action'] ?? '') === 'clear_history') {
     echo json_encode(['success' => $cleared]);
     exit;
 }
+?>
 ?>

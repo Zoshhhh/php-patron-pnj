@@ -199,13 +199,6 @@ Réponse JSON :
 3. Configurer le serveur web pour pointer vers le dossier `public/`
 4. Accéder à l'application via le navigateur
 
-## 🤝 Contribution
-
-1. Fork le projet
-2. Créer une branche pour votre fonctionnalité
-3. Commiter vos changements
-4. Pousser vers la branche
-5. Créer une Pull Request
 
 ## 📝 Notes
 

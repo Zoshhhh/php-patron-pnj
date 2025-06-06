@@ -184,21 +184,29 @@ class D100Factory implements DiceFabrique
     }
 }
 
+<<<<<<< HEAD
 // Classe pour gérer les résultats de lancers
 class DiceRollResult
 {
+=======
+// Classe pour gérer les résultats de lancers avec modificateurs
+class DiceRollResult {
+>>>>>>> Dice-Roll
     private $dice;
     private $count;
     private $results;
     private $total;
+<<<<<<< HEAD
+
+    public function __construct(DiceInterface $dice, $count, array $results)
+    {
+=======
     private $modifier;
     private $showBestWorst;
     private $advantageMode;
     
     public function __construct(DiceInterface $dice, $count, array $results, $modifier = 0, $showBestWorst = false, $advantageMode = false) {
-
-    public function __construct(DiceInterface $dice, $count, array $results)
-    {
+>>>>>>> Dice-Roll
         $this->dice = $dice;
         $this->count = $count;
         $this->results = $results;
@@ -280,6 +288,7 @@ class DiceRollResult
     }
 }
 
+<<<<<<< HEAD
 // Service pour gérer les lancers de dés
 class DiceRollService
 {
@@ -291,6 +300,18 @@ class DiceRollService
         try {
             $dice = null; // Initialisation de la variable
 
+=======
+// Service pour gérer les lancers de dés avec nouvelles fonctionnalités
+class DiceRollService {
+    public static function rollDice($diceType, $count = 1, $save = true, $saveHistory = false, $modifier = 0, $showBestWorst = false, $advantageMode = false) {
+        // Validation du nombre de dés
+        $count = max(1, min(20, (int)$count));
+        $modifier = max(-50, min(50, (int)$modifier)); // Limiter les modificateurs
+    
+        try {
+            $dice = null;
+        
+>>>>>>> Dice-Roll
             // Création du dé via la fabrique
             switch ($diceType) {
                 case 'd4':
@@ -322,6 +343,7 @@ class DiceRollService
                 default:
                     throw new InvalidArgumentException("Type de dé non supporté: " . $diceType);
             }
+<<<<<<< HEAD
 
             // Lancer des dés
             $results = $dice->rollMultiple($count);
@@ -329,20 +351,36 @@ class DiceRollService
             // Création du résultat
             $rollResult = new DiceRollResult($dice, $count, $results);
 
+=======
+            
+            // Lancer des dés
+            $results = $dice->rollMultiple($count);
+        
+            // Création du résultat avec les nouvelles options
+            $rollResult = new DiceRollResult($dice, $count, $results, $modifier, $showBestWorst, $advantageMode);
+        
+>>>>>>> Dice-Roll
             // Sauvegarde conditionnelle
             if ($save) {
                 $manager = new DataManager();
                 $manager->saveRollResult($rollResult, $saveHistory);
             }
+<<<<<<< HEAD
 
             return $rollResult;
 
+=======
+        
+            return $rollResult;
+        
+>>>>>>> Dice-Roll
         } catch (InvalidArgumentException $e) {
             throw new Exception("Erreur lors du lancer: " . $e->getMessage());
         }
     }
 }
 
+<<<<<<< HEAD
 // Gestionnaire de données avec historique
 class DataManager
 {
@@ -356,12 +394,49 @@ class DataManager
         // Sauvegarde du dernier résultat (comme avant)
         $saved = file_put_contents($this->file, json_encode($data)) !== false;
 
+=======
+// Gestionnaire de données avec historique amélioré
+class DataManager {
+    private $file = 'simple_dice_data.json';
+    private $historyFile = 'dice_history.json';
+    
+    public function saveRollResult(DiceRollResult $rollResult, $saveHistory = false) {
+        $data = $rollResult->toArray();
+        
+        // Sauvegarde du dernier résultat (comme avant)
+        $saved = file_put_contents($this->file, json_encode($data)) !== false;
+        
+>>>>>>> Dice-Roll
         // Sauvegarde dans l'historique si demandé
         if ($saveHistory) {
             $this->addToHistory($data);
         }
+<<<<<<< HEAD
 
         return $saved;
+=======
+        
+        return $saved;
+    }
+    
+    private function addToHistory($data) {
+        // Ajouter timestamp
+        $data['timestamp'] = date('Y-m-d H:i:s');
+        
+        // Lire l'historique existant
+        $history = $this->getHistory();
+        
+        // Ajouter le nouveau résultat au début
+        array_unshift($history, $data);
+        
+        // Limiter à 100 entrées max
+        if (count($history) > 100) {
+            $history = array_slice($history, 0, 100);
+        }
+        
+        // Sauvegarder l'historique
+        return file_put_contents($this->historyFile, json_encode($history, JSON_PRETTY_PRINT)) !== false;
+>>>>>>> Dice-Roll
     }
 
     private function addToHistory($data)
@@ -388,6 +463,7 @@ class DataManager
     {
         return file_exists($this->file) ? json_decode(file_get_contents($this->file), true) : null;
     }
+<<<<<<< HEAD
 
     public function getHistory()
     {
@@ -396,6 +472,14 @@ class DataManager
 
     public function clearHistory()
     {
+=======
+    
+    public function getHistory() {
+        return file_exists($this->historyFile) ? json_decode(file_get_contents($this->historyFile), true) : [];
+    }
+    
+    public function clearHistory() {
+>>>>>>> Dice-Roll
         return file_exists($this->historyFile) ? unlink($this->historyFile) : true;
     }
 }
@@ -409,17 +493,42 @@ if (($_POST['action'] ?? '') === 'roll') {
         $diceType = $_POST['dice'] ?? 'd20';
         $diceCount = $_POST['count'] ?? 1;
         $saveToFile = $_POST['save'] ?? true;
+<<<<<<< HEAD
         $saveHistory = $_POST['history'] ?? false; // Nouveau paramètre
 
         // Utilisation du service avec les flags save et history
         $rollResult = DiceRollService::rollDice($diceType, $diceCount, $saveToFile, $saveHistory);
 
+=======
+        $saveHistory = $_POST['history'] ?? false;
+        
+        // Nouveaux paramètres
+        $modifier = (int)($_POST['modifier'] ?? 0);
+        $showBestWorst = ($_POST['show_best_worst'] ?? '0') === '1';
+        $advantageMode = ($_POST['advantage_mode'] ?? '0') === '1';
+        
+        // Utilisation du service avec les nouvelles options
+        $rollResult = DiceRollService::rollDice(
+            $diceType, 
+            $diceCount, 
+            $saveToFile, 
+            $saveHistory, 
+            $modifier, 
+            $showBestWorst, 
+            $advantageMode
+        );
+        
+>>>>>>> Dice-Roll
         // Réponse JSON
         $response = $rollResult->toArray();
         $response['success'] = true;
         $response['saved'] = $saveToFile;
         $response['history_saved'] = $saveHistory;
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Dice-Roll
         echo json_encode($response);
 
     } catch (Exception $e) {
@@ -438,13 +547,21 @@ if (($_GET['action'] ?? '') === 'get') {
     exit;
 }
 
+<<<<<<< HEAD
 // Nouvelle route pour récupérer l'historique
+=======
+// Route pour récupérer l'historique
+>>>>>>> Dice-Roll
 if (($_GET['action'] ?? '') === 'history') {
     echo json_encode($manager->getHistory());
     exit;
 }
 
+<<<<<<< HEAD
 // Nouvelle route pour vider l'historique
+=======
+// Route pour vider l'historique
+>>>>>>> Dice-Roll
 if (($_POST['action'] ?? '') === 'clear_history') {
     $cleared = $manager->clearHistory();
     echo json_encode(['success' => $cleared]);

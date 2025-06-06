@@ -214,14 +214,13 @@ foreach ($classes as $classe) {
                 }
             }
         }
-
-        function apiRollDiceAsync(diceType, diceQuantity, callback) {
-            fetch('/api.php?', {
+        function apiRollDiceAsync(diceType, diceQuantity, callback) { 
+            fetch('/api.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-Requested-With': 'XMLHttpRequest'
-                },
+
                 body: `action=roll&dice=${diceType}&count=${diceQuantity}&save=0&save=0`
             })
             .then(res => res.json())
@@ -263,7 +262,6 @@ foreach ($classes as $classe) {
             });
         }
 
-        // Mettre à jour les stats au chargement de la page
         document.addEventListener('DOMContentLoaded', updateDefaultStats);
     </script>
 </body>

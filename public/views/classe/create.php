@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         function apiRollDiceAsync(diceType, diceQuantity, callback) {
-            fetch('../../src/Service/api.php?', {
+            fetch('/api.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

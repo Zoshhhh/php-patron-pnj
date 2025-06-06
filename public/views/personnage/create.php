@@ -220,8 +220,8 @@ foreach ($classes as $classe) {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-Requested-With': 'XMLHttpRequest'
-
-                body: `action=roll&dice=${diceType}&count=${diceQuantity}&save=0&save=0`
+                },
+                body: `action=roll&dice=${diceType}&count=${diceQuantity}&save=0`
             })
             .then(res => res.json())
             .then(data => {

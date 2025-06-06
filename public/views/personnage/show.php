@@ -60,6 +60,7 @@ if (isset($persoData['inventaire'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($personnage->getNom()) ?> - Fiche de personnage</title>
+    <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/details.css">
     <style>

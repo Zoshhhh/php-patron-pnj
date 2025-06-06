@@ -217,13 +217,13 @@ foreach ($classes as $classe) {
 
 
         function apiRollDiceAsync(diceType, diceQuantity, callback) {
-            fetch('api.php?action=roll', {
+            fetch('api.php?', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
-                body: `action=roll&dice=${diceType}&count=${diceQuantity}`
+                body: `action=roll&dice=${diceType}&count=${diceQuantity}&save=false`
             })
                 .then(res => res.json())
                 .then(data => {

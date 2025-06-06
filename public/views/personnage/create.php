@@ -75,7 +75,7 @@ foreach ($classes as $classe) {
 <body>
     <div class="creation-form">
         <nav class="back-nav">
-            <a href="/views/personnage/index.php" class="back-button">
+            <a href="index.php" class="back-button">
                 <span class="icon">←</span>
                 <span>Retour</span>
             </a>
@@ -215,33 +215,50 @@ foreach ($classes as $classe) {
             }
         }
 
-
-        function apiRollDiceAsync(diceType, diceQuantity, callback) {
-            fetch('api.php?', {
+        function apiRollDiceAsync(diceType, diceQuantity, callback) { 
+            fetch('/api.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
-                body: `action=roll&dice=${diceType}&count=${diceQuantity}&save=false`
+                body: `action=roll&dice=${diceType}&count=${diceQuantity}&save=0&saveHistory=0`
             })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        callback(data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    callback(0);
+            .then(res => res.json())
+            .then(data => {
+                console.log('Réponse API:', data);
+                if (data.success && data.results) {
+                    callback({
+                        success: true,
+                        results: data.results
+                    });
+                } else {
+                    console.error('Format de réponse invalide:', data);
+                    callback({
+                        success: false,
+                        results: Array(diceQuantity).fill(10)
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                callback({
+                    success: false,
+                    results: Array(diceQuantity).fill(10)
                 });
+            });
         }
 
         function updateUi(stats, results) {
+            if (!results || !Array.isArray(results)) {
+                console.error('Résultats invalides');
+                return;
+            }
+            
             stats.forEach((stat, index) => {
                 const input = document.getElementById(stat);
-                if (input) {
-                    input.value = results[index] || 0;
+                if (input && results[index] !== undefined) {
+                    input.value = results[index];
                 }
             });
         }
